@@ -144,9 +144,12 @@ build
 *.out
 *.app
 
-exported/*
-!exported/.gitkeep
-inference_cc
-inference_go
-inference_c
-tensorflow_config.txt
+inference/exported/*
+inference/!exported/.gitkeep
+inference/cc/inference_cc
+inference/go/inference_go
+inference/c/inference_c
+inference/tensorflow_config.txt
+example/tensorflow
+example/example
+example/tensorflow_config.txt

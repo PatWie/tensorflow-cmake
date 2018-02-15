@@ -1,19 +1,20 @@
-# Running Inference in TensorFlow in C/C+/Go/Python
+# TensorFlow C++ Collection
 
-Just a dead-simple way to run saved models from tensorflow in different languages.
+Just a dead-simple way to run saved models from tensorflow in different languages **without** messing around with bazel.
 
-### Requiements
+- **[inference](./inference)** running inference code using CMake in C/C+/Go/Python
+- **[example](./example)** running the C++ example from TensorFlow code using CMake
 
 It assumes that you have install TensorFlow from source using
 
 ```console
   ./configure
-  # ...
+  # ... or whatever options you used here
   bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow.so
   bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow_cc.so
 ```
 
-Further, we ned to the path to TensorFlow git repository such that we can link to these libraries. There, set the path such that the output looks like
+Further, these examples need to know to the path to TensorFlow GIT-Repository, such that it finds all headers etc:
 
 ```console
 user@host $ export TensorFlow_GIT_REPO=/path/to/tensorflow/git
@@ -27,6 +28,10 @@ ANDROID_NDK_HOME    bazel-tensorflow    configure.py.bkp   README.md
 ```
 
 
+## Inference in TensorFlow in C/C+/Go/Python
+
+This example creates a model in Python, save the graph to disk and load it in C/C+/Go/Python to perform inference.
+
 ### 1. Save Model
 
 We just run the very basic model
@@ -36,7 +41,7 @@ x = tf.placeholder(tf.float32, shape=[1, 2], name='input')
 output = tf.identity(tf.layers.dense(x, 1), name='output')
 ```
 
-Therefore, just save the model like you normally do, e.g.,
+Therefore, just save the model like you normally do. This is done in
 
 ```console
 user@host $ python example.py
@@ -55,7 +60,7 @@ dense/bias:0     [0.]
 
 These bindings are tested on the [9d419e4511](https://github.com/tensorflow/tensorflow/commit/995d836e9ba7cbee56948f73bdbd099d419e4511) commit.
 
-##### Python
+#### Python
 
 ```console
 user@host $ python python/inference.py
@@ -70,7 +75,7 @@ dense/bias:0     [0.]
 
 ```
 
-##### C++
+#### C++
 
 ```console
 user@host $ cd cc
@@ -86,7 +91,7 @@ dense/bias:0    Tensor<type: float shape: [1] values: 0>
 
 ```
 
-##### C
+#### C
 
 ```console
 user@host $ cd c
@@ -100,7 +105,7 @@ user@host $ ./c/inference_c
 ```
 
 
-##### Go
+#### Go
 
 ```console
 user@host $ export LIBRARY_PATH=${TensorFlow_GIT_REPO}/bazel-bin/tensorflow:$LIBRARY_PATH
@@ -115,4 +120,21 @@ input           [[1 1]]
 output          [[2.1909506]]
 dense/kernel:0  [[0.9070684] [1.2838823]]
 dense/bias:0    [0]
+```
+
+## Example.cc with CMake
+
+Trying to compile the example.cc from the official tutorial. Looking at the TF -documentation.
+What do you see? The usual fare? Guess what. To the hell with bazel, let use cmake.
+
+```console
+user@host $ cd example
+user@host $ python prepare.py
+user@host $ cmake .
+user@host $ make
+user@host $ ./example
+
+2018-02-15 21:48:25.259598: I /git/github.com/patwie/tensorflow_inference/example/example.cc:22] 19
+-3
+
 ```
