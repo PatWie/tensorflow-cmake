@@ -6,7 +6,6 @@ Just a dead-simple way to run saved models from tensorflow in different language
 - **[simple example](./examples/simple)** running the C++ example from TensorFlow code using CMake
 - **[OpenCV example](./examples/resize)** running a C++ example using TensorFlow in combination with OpenCV to resize an image (uses CMake)
 
-
 It assumes that you have installed TensorFlow from source using
 
 ```console
