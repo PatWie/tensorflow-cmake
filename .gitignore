@@ -153,3 +153,6 @@ inference/tensorflow_config.txt
 example/tensorflow
 example/example
 example/tensorflow_config.txt
+
+examples/simple/tensorflow
+examples/resize/tensorflow

@@ -3,7 +3,9 @@
 Just a dead-simple way to run saved models from tensorflow in different languages **without** messing around with bazel.
 
 - **[inference](./inference)** running inference code using CMake in C/C+/Go/Python
-- **[example](./example)** running the C++ example from TensorFlow code using CMake
+- **[simple example](./examples/simple)** running the C++ example from TensorFlow code using CMake
+- **[OpenCV example](./examples/resize)** running a C++ example using TensorFlow in combination with OpenCV to resize an image (uses CMake)
+
 
 It assumes that you have install TensorFlow from source using
 
@@ -128,7 +130,7 @@ Trying to compile the example.cc from the official tutorial. Looking at the TF -
 What do you see? The usual fare? Guess what. To the hell with bazel, let use cmake.
 
 ```console
-user@host $ cd example
+user@host $ cd examples/simple
 user@host $ python prepare.py
 user@host $ cmake .
 user@host $ make
