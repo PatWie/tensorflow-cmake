@@ -23,7 +23,7 @@ int main() {
   std::string fn = "Grace_Hopper.png";
 
   auto net1 = tensorflow::ops::ReadFile(root, fn);
-  auto net2 = tensorflow::ops::DecodeJpeg(root, net1);
+  auto net2 = tensorflow::ops::DecodePng(root, net1);
   auto net3 = tensorflow::ops::Cast(root, net2, tensorflow::DT_FLOAT);
   auto net4 = tensorflow::ops::ExpandDims(root, net3, 0);
   auto net5 = tensorflow::ops::ResizeBilinear(root, net4, tensorflow::ops::Const(root, {2 * 606, 2 * 517}));
@@ -35,6 +35,6 @@ int main() {
   tensorflow::ClientSession session(root);
 
   // // Run and fetch v
-
+  TF_CHECK_OK(session.Run({net8}, &outputs));
   return 0;
 }
