@@ -36,18 +36,25 @@ tensorflow::Status LoadModel(tensorflow::Session *sess, std::string graph_fn, st
   if (status != tensorflow::Status::OK())
     return status;
 
-  // create the graph
+  // create the graph in the current session
   status = sess->Create(graph_def.graph_def());
   if (status != tensorflow::Status::OK())
     return status;
 
   // restore model from checkpoint, iff checkpoint is given
   if (checkpoint_fn != "") {
-    tensorflow::Tensor checkpointPathTensor(tensorflow::DT_STRING, tensorflow::TensorShape());
-    checkpointPathTensor.scalar<std::string>()() = checkpoint_fn;
 
-    tensor_dict feed_dict = {{graph_def.saver_def().filename_tensor_name(), checkpointPathTensor}};
-    status = sess->Run(feed_dict, {}, {graph_def.saver_def().restore_op_name()}, nullptr);
+    const std::string restore_op_name = graph_def.saver_def().restore_op_name();
+    const std::string filename_tensor_name = graph_def.saver_def().filename_tensor_name();
+
+    tensorflow::Tensor filename_tensor(tensorflow::DT_STRING, tensorflow::TensorShape());
+    filename_tensor.scalar<std::string>()() = checkpoint_fn;
+
+    tensor_dict feed_dict = {{filename_tensor_name, filename_tensor}};
+    status = sess->Run(feed_dict,
+                       {},
+                       {restore_op_name},
+                       nullptr);
     if (status != tensorflow::Status::OK())
       return status;
   } else {

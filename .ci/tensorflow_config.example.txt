@@ -1,0 +1,3 @@
+set(TensorFlow_ABI 1)
+set(TensorFlow_INCLUDE_DIRS "/usr/local/lib/python2.7/dist-packages/tensorflow/include")
+set(TensorFlow_LIBRARIES "/usr/local/lib/python2.7/dist-packages/tensorflow/libtensorflow_framework.so")

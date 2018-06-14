@@ -1,0 +1,6 @@
+pipeline:
+  tensorflow_v1.9:
+    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    commands:
+      - chmod +x .ci/build.sh
+      - .ci/build.sh
