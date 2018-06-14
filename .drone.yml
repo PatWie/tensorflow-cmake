@@ -2,13 +2,5 @@ pipeline:
   tensorflow_v1.9:
     image: tensorflow:cuda9-ubuntu16.04-tf1.9
     commands:
-      - cd inference/cc/
-      - export TensorFlow_GIT_REPO=/tensorflow
-      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
-      - cp ../../tensorflow_config.example.txt tensorflow_config.txt
-      - cmake .
-      - make
-      - cd ../c/
-      - cp ../../tensorflow_config.example.txt tensorflow_config.txt
-      - cmake .
-      - make
+      - chmod +x .ci/build.sh
+      - .ci/build.sh
