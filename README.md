@@ -1,5 +1,9 @@
 # TensorFlow C++ Collection
 
+| TensorFlow v1.9rc0 (C++, C inference) |
+| ----- |
+| [![Build Status](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) |
+
 Just a dead-simple way to run saved models from tensorflow in different languages **without** messing around with bazel.
 
 - **[inference](./inference)** running inference code using CMake in C/C+/Go/Python
