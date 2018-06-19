@@ -10,3 +10,8 @@ cd ../c/
 cp ../../.ci/tensorflow_config.example.txt tensorflow_config.txt
 cmake .
 make
+
+cd ../examples/keras/
+cp ../../.ci/tensorflow_config.example.txt tensorflow_config.txt
+cmake .
+make
