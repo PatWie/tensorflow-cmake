@@ -6,7 +6,8 @@
 
 Just a dead-simple way to run saved models from tensorflow in different languages **without** messing around with bazel.
 
-- **[inference](./inference)** running inference code using CMake in C/C+/Go/Python
+- **[inference](./inference)** running inference code using CMake in C/C++/Go/Python
+- **[keras cpp-inference example](./examples/keras)** running inference code using CMake in C++ from a keras-model
 - **[simple example](./examples/simple)** running the C++ example from TensorFlow code using CMake
 - **[OpenCV example](./examples/resize)** running a C++ example using TensorFlow in combination with OpenCV to resize an image (uses CMake)
 
