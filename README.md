@@ -1,6 +1,6 @@
 # TensorFlow C++ Collection
 
-| TensorFlow v1.9rc0 (C & C++) |
+| TensorFlow v1.9 (C & C++) |
 | ----- |
 | [![Build Status](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) |
 
