@@ -34,6 +34,18 @@ ANDROID_NDK_HOME    bazel-tensorflow    configure.py.bkp   README.md
 ```
 
 
+## Custom Operation in C++/Cuda
+
+```bash
+cd custom_op/user_ops
+python configure.py
+cmake .
+make
+python test_matrix_add.py
+```
+
+You might need to edit the `CMakeList.txt` file as `"${CUDA_INCLUDE_DIRS}/../../"` should point to the toolkit-directory containing `cuda, samples`.
+
 ## Inference in TensorFlow in C/C+/Go/Python
 
 This example creates a model in Python, saves the graph to disk and loads it in C/C+/Go/Python to perform inference.
