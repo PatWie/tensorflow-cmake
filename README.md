@@ -21,7 +21,7 @@ It assumes that you have installed TensorFlow from source using
   bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow_cc.so
 ```
 
-Further, these examples need to know to the path to TensorFlow git-repository, such that it finds all headers etc:
+Note, the *inference* examples need to know to the path to TensorFlow git-repository, such that it finds all headers etc:
 
 ```console
 user@host $ export TensorFlow_GIT_REPO=/path/to/tensorflow/git
