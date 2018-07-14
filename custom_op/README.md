@@ -6,7 +6,6 @@ This is a very simple example on adding custom C++/CUDA ops to TensorFlow and it
 The current version is tested on TensorFlow v1.9. Run the script
 
 ```bash
-python configure.py
 cmake .
 make
 python test_matrix_add.py

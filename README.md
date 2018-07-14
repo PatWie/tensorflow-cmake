@@ -6,6 +6,7 @@
 
 Just a dead-simple way to run saved models from tensorflow in different languages **without** messing around with bazel.
 
+- **[custom operation](./custom_ops)** build a custom op for TensorFLow in C++/CUDA
 - **[inference](./inference)** running inference code using CMake in C/C++/Go/Python
 - **[keras cpp-inference example](./examples/keras)** running inference code using CMake in C++ from a keras-model
 - **[simple example](./examples/simple)** running the C++ example from TensorFlow code using CMake
@@ -36,12 +37,13 @@ ANDROID_NDK_HOME    bazel-tensorflow    configure.py.bkp   README.md
 
 ## Custom Operation in C++/Cuda
 
-```bash
-cd custom_op/user_ops
-python configure.py
-cmake .
-make
-python test_matrix_add.py
+```console
+user@host $ cd custom_op/user_ops
+user@host $ cmake .
+user@host $ make
+user@host $ python test_matrix_add.py
+user@host $ cd ..
+user@host $ python example.py
 ```
 
 You might need to edit the `CMakeList.txt` file as `"${CUDA_INCLUDE_DIRS}/../../"` should point to the toolkit-directory containing `cuda, samples`.
