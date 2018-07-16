@@ -1,12 +1,12 @@
-# TensorFlow C++ Collection (TensorFlow >= v1.9.0)
+# TensorFlow C++ Collection
 
-[![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference)
+TensorFlow >= v1.9.0: [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference)
 
 Just a dead-simple way to run saved models from tensorflow in different languages **without** messing around with bazel.
 
-| Example | no TensorFlow source required | Explanation |
+| example | pip-only dependency | explanation |
 | ------ | ------ | ------ |
-| [custom operation](./custom_ops) | :heavy_check_mark: | build a custom op for TensorFLow in C++/CUDA
+| [custom operation](./custom_op) | :heavy_check_mark: | build a custom op for TensorFLow in C++/CUDA
 | [inference  (C++, C, Go)](./inference) | :x: | run inference code using CMake in C/C++/Go/Python
 | [keras cpp-inference example](./examples/keras) | :x: | run keras-model from C++
 | [simple example](./examples/simple) | :x: | run the C++ example from TensorFlow code using CMake
@@ -15,7 +15,7 @@ Just a dead-simple way to run saved models from tensorflow in different language
 
 ## Custom Operation
 
-This example illustrates the process of creating a custom operation using C++ and CUDA. It is *not* intended to show an implemenation obtaining peak-performance. Instead it is just a boilerplate-template.
+This example illustrates the process of creating a custom operation using C++/CUDA and CMake. It is *not* intended to show an implemenation obtaining peak-performance. Instead it is just a boilerplate-template.
 
 ```console
 user@host $ pip install tensorflow-gpu --user # just the pip package is needed
@@ -28,7 +28,7 @@ user@host $ python example.py
 ```
 ## Inference
 
-This example creates a model in Python, saves the graph to disk and loads it in C/C+/Go/Python to perform inference. As they are based on the C-API they require the `libtensorflow_cc.so` library which is *not* shipped in the pip-package. Hence, you will need to build TensorFlow from source beforehand,  like
+This example creates a model in Python, saves the graph to disk and loads it in C/C+/Go/Python to perform inference. As these examples are based on the TensorFlow C-API they require the `libtensorflow_cc.so` library which is *not* shipped in the pip-package. Hence, you will need to build TensorFlow from source beforehand, e.g.,
 
 ```console
 user@host $ ls ${TENSORFLOW_SOURCE_DIR}
@@ -68,8 +68,6 @@ dense/bias:0     [0.]
 ```
 
 ### 2. Run Inference
-
-These bindings are tested on the [9d419e4511 TensorFlow](https://github.com/tensorflow/tensorflow/commit/995d836e9ba7cbee56948f73bdbd099d419e4511) commit.
 
 #### Python
 
