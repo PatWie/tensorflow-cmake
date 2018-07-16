@@ -1,6 +1,38 @@
 pipeline:
-  tensorflow_v1.9:
+  custom_op:
     image: tensorflow:cuda9-ubuntu16.04-tf1.9
     commands:
-      - chmod +x .ci/build.sh
-      - .ci/build.sh
+      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+      - cd custom_op/user_ops
+      - cmake .
+      - make
+  inference_cc:
+    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    environment:
+      - TENSORFLOW_SOURCE_DIR=/tensorflow
+      - TENSORFLOW_BUILD_DIR=/tensorflow/bazel-bin/tensorflow/
+    commands:
+      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+      - cd inference/cc/
+      - cmake .
+      - make
+  inference_c:
+    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    environment:
+      - TENSORFLOW_SOURCE_DIR=/tensorflow
+      - TENSORFLOW_BUILD_DIR=/tensorflow/bazel-bin/tensorflow/
+    commands:
+      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+      - cd inference/c/
+      - cmake .
+      - make
+  keras:
+    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    environment:
+      - TENSORFLOW_SOURCE_DIR=/tensorflow
+      - TENSORFLOW_BUILD_DIR=/tensorflow/bazel-bin/tensorflow/
+    commands:
+      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+      - cd examples/keras/
+      - cmake .
+      - make

@@ -17,7 +17,6 @@ WARNING: This is curently broken giving a segmentation fault.
 
 int main() {
 
-
   tensorflow::Scope root = tensorflow::Scope::NewRootScope();
 
   std::string fn = "Grace_Hopper.png";
