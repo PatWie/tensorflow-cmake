@@ -16,6 +16,10 @@
 #   the libraries to link against to use TENSORFLOW.
 # ``TENSORFLOW_FOUND TRUE``
 #   If false, do not try to use TENSORFLOW.
+# ``TENSORFLOW_SOURCE_DIR``
+#   Path to source of TensorFlow, when env-var 'TENSORFLOW_SOURCE_DIR' is set and path exists
+# ``TENSORFLOW_C_LIBRARY``
+#   Path to libtensorflow_cc.so (require env-var 'TENSORFLOW_BUILD_DIR')
 #
 #
 # USAGE
@@ -81,6 +85,50 @@ else()
 
 endif()
 
+# export TENSORFLOW_SOURCE_DIR=/graphics/opt/opt_Ubuntu16.04/tensorflow/src
+# detect TensorFlow git repository
+set(TENSORFLOW_HAS_SOURCE FALSE)
+set(TENSORFLOW_SOURCE_DIR "")
+if(EXISTS "$ENV{TENSORFLOW_SOURCE_DIR}/README.md")
+  if(EXISTS "$ENV{TENSORFLOW_SOURCE_DIR}/WORKSPACE")
+    set(TENSORFLOW_HAS_SOURCE TRUE)
+  endif()
+endif()
+
+if(TENSORFLOW_HAS_SOURCE)
+  set(TENSORFLOW_SOURCE_DIR $ENV{TENSORFLOW_SOURCE_DIR})
+  message(STATUS "TensorFlow-SOURCE-DIRECTORY is ${TENSORFLOW_SOURCE_DIR}")
+else()
+  message(STATUS "No TensorFlow source repository detected")
+endif()
+
+# detect libtensorflow_cc.so
+# export TENSORFLOW_BUILD_DIR=/graphics/opt/opt_Ubuntu16.04/tensorflow/build/v1.9.0/
+find_library(TENSORFLOW_C_LIBRARY
+  NAMES libtensorflow_cc.so
+  PATHS $ENV{TENSORFLOW_BUILD_DIR}
+  DOC "TensorFlow CC library." )
+
+if(TENSORFLOW_C_LIBRARY)
+  message(STATUS "TensorFlow-CC-LIBRARY is ${TENSORFLOW_C_LIBRARY}")
+else()
+  message(STATUS "No TensorFlow-CC-LIBRARY detected")
+endif()
+
+macro(TENSORFLOW_REQUIRE_C_LIBRARY)
+  if(TENSORFLOW_C_LIBRARY)
+  else()
+    message(FATAL_ERROR "Project requires libtensorflow_cc.so, please specify the path in ENV-VAR 'TENSORFLOW_BUILD_DIR'")
+  endif()
+endmacro()
+
+macro(TENSORFLOW_REQUIRE_SOURCE)
+  if(TENSORFLOW_HAS_SOURCE)
+  else()
+    message(FATAL_ERROR "Project requires TensorFlow source directory, please specify the path in ENV-VAR 'TENSORFLOW_SOURCE_DIR'")
+  endif()
+endmacro()
+
 macro(add_tensorflow_operation op_name)
   message(STATUS "will build custom TensorFlow operation \"${op_name}\"")
 
@@ -92,6 +140,14 @@ macro(add_tensorflow_operation op_name)
   set_target_properties(${op_name}_op PROPERTIES PREFIX "")
   target_link_libraries(${op_name}_op LINK_PUBLIC ${op_name}_op_cu ${TENSORFLOW_LIBRARY})
 endmacro()
+
+# simplify TensorFlow dependencies
+add_library(TENSORFLOW_DEP INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(TENSORFLOW_DEP INTERFACE ${TENSORFLOW_SOURCE_DIR})
+TARGET_INCLUDE_DIRECTORIES(TENSORFLOW_DEP INTERFACE ${TENSORFLOW_INCLUDE_DIR})
+TARGET_LINK_LIBRARIES(TENSORFLOW_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TENSORFLOW_C_LIBRARY} -Wl,--no-whole-archive)
+TARGET_LINK_LIBRARIES(TENSORFLOW_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TENSORFLOW_LIBRARY} -Wl,--no-whole-archive)
+
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(

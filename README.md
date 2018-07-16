@@ -1,43 +1,24 @@
-# TensorFlow C++ Collection
+# TensorFlow C++ Collection (TensorFlow >= v1.9.0)
 
-| TensorFlow v1.9 (C & C++) |
-| ----- |
-| [![Build Status](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) |
-
+[![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference)
 Just a dead-simple way to run saved models from tensorflow in different languages **without** messing around with bazel.
 
-- **[custom operation](./custom_ops)** build a custom op for TensorFLow in C++/CUDA
-- **[inference](./inference)** running inference code using CMake in C/C++/Go/Python
-- **[keras cpp-inference example](./examples/keras)** running inference code using CMake in C++ from a keras-model
-- **[simple example](./examples/simple)** running the C++ example from TensorFlow code using CMake
-- **[OpenCV example](./examples/resize)** running a C++ example using TensorFlow in combination with OpenCV to resize an image (uses CMake)
+| Example | requires TensorFlow source | Explanation |
+| ------ | ------ | ------ |
+| [custom operation](./custom_ops) | no | build a custom op for TensorFLow in C++/CUDA
+| [inference  (C++, C, Go)](./inference) | yes | running inference code using CMake in C/C++/Go/Python
+| [keras cpp-inference example](./examples/keras) | yes | running inference code using CMake in C++ from a keras-model
+| [simple example](./examples/simple) | yes | running the C++ example from TensorFlow code using CMake
+| [OpenCV example](./examples/resize) | yes | running a C++ example using TensorFlow in combination with OpenCV to resize an image (uses CMake)
 
-It assumes that you have installed TensorFlow from source using
+## Details
 
-```console
-  ./configure
-  # ... or whatever options you used here
-  bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow.so
-  bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow_cc.so
-```
+### Custom Operation
 
-Further, these examples need to know to the path to TensorFlow git-repository, such that it finds all headers etc:
+This example illustrates the process of creating a custom operation using C++ and CUDA. It is *not* intended to show an implemenation obtaining peak-performance. INstead it is just a boilerplate-template.
 
 ```console
-user@host $ export TensorFlow_GIT_REPO=/path/to/tensorflow/git
-user@host $ ls TensorFlow_GIT_REPO
-
-ACKNOWLEDGMENTS     bazel-genfiles      configure          pip
-ADOPTERS.md         bazel-out           configure.py       py.pynano
-ANDROID_NDK_HOME    bazel-tensorflow    configure.py.bkp   README.md
-...
-
-```
-
-
-## Custom Operation in C++/Cuda
-
-```console
+user@host $ pip install tensorflow-gpu --user # just the pip package is needed
 user@host $ cd custom_op/user_ops
 user@host $ cmake .
 user@host $ make
@@ -45,14 +26,26 @@ user@host $ python test_matrix_add.py
 user@host $ cd ..
 user@host $ python example.py
 ```
+### Inference
 
-You might need to edit the `CMakeList.txt` file as `"${CUDA_INCLUDE_DIRS}/../../"` should point to the toolkit-directory containing `cuda, samples`.
+This example creates a model in Python, saves the graph to disk and loads it in C/C+/Go/Python to perform inference. As they are based on the C-API they require the `libtensorflow_cc.so` library which is *not* shipped in the pip-package. Hence, you will need to build TensorFlow from source beforehand,  like
 
-## Inference in TensorFlow in C/C+/Go/Python
+```console
+user@host $ ls ${TENSORFLOW_SOURCE_DIR}
 
-This example creates a model in Python, saves the graph to disk and loads it in C/C+/Go/Python to perform inference.
+ACKNOWLEDGMENTS     bazel-genfiles      configure          pip
+ADOPTERS.md         bazel-out           configure.py       py.pynano
+ANDROID_NDK_HOME    bazel-tensorflow    configure.py.bkp   README.md
+...
+user@host $ cd ${TENSORFLOW_SOURCE_DIR}
+user@host $  ./configure
+user@host $  # ... or whatever options you used here
+user@host $ bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow.so
+user@host $ bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow_cc.so
+user@host $ export TENSORFLOW_BUILD_DIR=bazel-bin/tensorflow/
+```
 
-### 1. Save Model
+#### 1. Save Model
 
 We just run a very basic model
 
@@ -72,15 +65,13 @@ output           [[2.1909506]]
 dense/kernel:0   [[0.9070684]
  [1.2838823]]
 dense/bias:0     [0.]
-
-
 ```
 
-### 2. Run Inference
+#### 2. Run Inference
 
 These bindings are tested on the [9d419e4511 TensorFlow](https://github.com/tensorflow/tensorflow/commit/995d836e9ba7cbee56948f73bdbd099d419e4511) commit.
 
-#### Python
+##### Python
 
 ```console
 user@host $ python python/inference.py
@@ -91,11 +82,9 @@ output           [[2.1909506]]
 dense/kernel:0   [[0.9070684]
  [1.2838823]]
 dense/bias:0     [0.]
-
-
 ```
 
-#### C++
+##### C++
 
 ```console
 user@host $ cd cc
@@ -108,10 +97,9 @@ input           Tensor<type: float shape: [1,2] values: [1 1]>
 output          Tensor<type: float shape: [1,1] values: [2.19095063]>
 dense/kernel:0  Tensor<type: float shape: [2,1] values: [0.907068372][1.28388226]>
 dense/bias:0    Tensor<type: float shape: [1] values: 0>
-
 ```
 
-#### C
+##### C
 
 ```console
 user@host $ cd c
@@ -125,7 +113,7 @@ user@host $ ./c/inference_c
 ```
 
 
-#### Go
+##### Go
 
 ```console
 user@host $ export LIBRARY_PATH=${TensorFlow_GIT_REPO}/bazel-bin/tensorflow:$LIBRARY_PATH
@@ -140,21 +128,4 @@ input           [[1 1]]
 output          [[2.1909506]]
 dense/kernel:0  [[0.9070684] [1.2838823]]
 dense/bias:0    [0]
-```
-
-## Example.cc with CMake
-
-Trying to compile the example.cc from the official tutorial, looking at the TensorFlow-documentation.
-What do you see? The usual fare? Guess what. To the hell with bazel, let use CMake:
-
-```console
-user@host $ cd examples/simple
-user@host $ python prepare.py
-user@host $ cmake .
-user@host $ make
-user@host $ ./example
-
-2018-02-15 21:48:25.259598: I /git/github.com/patwie/tensorflow_inference/example/example.cc:22] 19
--3
-
 ```

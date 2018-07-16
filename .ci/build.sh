@@ -1,17 +1,18 @@
-export TensorFlow_GIT_REPO=/tensorflow
+# contains README.md of TensorFlow
+export TENSORFLOW_SOURCE_DIR=/tensorflow
+# contains libtensorflow_cc.so
+export TENSORFLOW_C_LIBRARY=/tensorflow/bazel-bin/tensorflow/
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
 
+
 cd inference/cc/
-cp ../../.ci/tensorflow_config.example.txt tensorflow_config.txt
 cmake .
 make
 
 cd ../c/
-cp ../../.ci/tensorflow_config.example.txt tensorflow_config.txt
 cmake .
 make
 
 cd ../examples/keras/
-cp ../../.ci/tensorflow_config.example.txt tensorflow_config.txt
 cmake .
 make

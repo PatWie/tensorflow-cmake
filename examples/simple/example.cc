@@ -9,7 +9,7 @@ int main() {
   using namespace tensorflow::ops;
   Scope root = Scope::NewRootScope();
   // Matrix A = [3 2; -1 0]
-  auto A = Const(root, { {3.f, 2.f}, {-1.f, 0.f} });
+  auto A = Const(root, { {3.f, 2.f}, { -1.f, 0.f} });
   // Vector b = [3 5]
   auto b = Const(root, { {3.f, 5.f} });
   // v = Ab^T

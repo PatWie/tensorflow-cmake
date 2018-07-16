@@ -4,7 +4,6 @@ import os
 from distutils.dir_util import copy_tree
 
 
-
 if '__cxx11_abi_flag__' not in dir(tf):
     print("-- Cannot find the ABI version of TensorFlow.")
     print("-- Your TensorFlow version is probably too old. Please upgrade to at least TF v1.5.")

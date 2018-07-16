@@ -66,7 +66,6 @@ struct MatrixAddGrad<CPUDevice, Dtype> {
   }
 };
 
-template struct MatrixAddGrad<CPUDevice, int>;
 template struct MatrixAddGrad<CPUDevice, float>;
 template struct MatrixAddGrad<CPUDevice, double>;
 
