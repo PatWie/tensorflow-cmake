@@ -4,21 +4,25 @@
 #
 # Find TensorFlow library and includes
 #
+# automatically set variables have prefix "TensorFlow",
+# while variables you need to specify have prefix "TENSORFLOW"
 # This module will set the following variables in your project:
 #
-# ``TENSORFLOW_VERSION``
+# ``TensorFlow_VERSION``
 #   exact TensorFlow version obtained from runtime
-# ``TENSORFLOW_ABI``
+# ``TensorFlow_ABI``
 #   ABI specification of TensorFlow library
-# ``TENSORFLOW_INCLUDE_DIR``
+# ``TensorFlow_INCLUDE_DIR``
 #   where to find tensorflow header files
-# ``TENSORFLOW_LIBRARY``
+# ``TensorFlow_LIBRARY``
 #   the libraries to link against to use TENSORFLOW.
-# ``TENSORFLOW_FOUND TRUE``
+# ``TensorFlow_FOUND TRUE``
 #   If false, do not try to use TENSORFLOW.
-# ``TENSORFLOW_SOURCE_DIR``
+#
+#  for some examples, you will need to specify on of the following paths
+# ``TensorFlow_SOURCE_DIR``
 #   Path to source of TensorFlow, when env-var 'TENSORFLOW_SOURCE_DIR' is set and path exists
-# ``TENSORFLOW_C_LIBRARY``
+# ``TensorFlow_C_LIBRARY``
 #   Path to libtensorflow_cc.so (require env-var 'TENSORFLOW_BUILD_DIR')
 #
 #
@@ -70,25 +74,27 @@ else()
     set (TF_VERSION_COUNT 0)
 endif()
 
-if("${TF_VERSION_MAJOR}.${TF_VERSION_MINOR}" STREQUAL "${TENSORFLOW_FIND_VERSION_MAJOR}.${TENSORFLOW_FIND_VERSION_MINOR}")
-  set(TENSORFLOW_VERSION ${TF_VERSION})
-  set(TENSORFLOW_ABI ${TF_ABI})
-  set(TENSORFLOW_INCLUDE_DIR ${TF_INCLUDE_DIR})
-  set(TENSORFLOW_LIBRARY ${TF_LIBRARY})
-  set(TENSORFLOW_FOUND TRUE)
-  message(STATUS "Found TensorFlow: (found suitable exact version \"${TENSORFLOW_VERSION}\")")
-  message(STATUS "TensorFlow-ABI is ${TENSORFLOW_ABI}")
-  message(STATUS "TensorFlow-INCLUDE_DIR is ${TENSORFLOW_INCLUDE_DIR}")
-  message(STATUS "TensorFlow-LIBRARY is ${TENSORFLOW_LIBRARY}")
+if("${TF_VERSION_MAJOR}.${TF_VERSION_MINOR}" STREQUAL "${TensorFlow_FIND_VERSION_MAJOR}.${TensorFlow_FIND_VERSION_MINOR}")
+  set(TensorFlow_VERSION ${TF_VERSION})
+  set(TensorFlow_ABI ${TF_ABI})
+  set(TensorFlow_INCLUDE_DIR ${TF_INCLUDE_DIR})
+  set(TensorFlow_LIBRARY ${TF_LIBRARY})
+  set(TensorFlow_FOUND TRUE)
+  message(STATUS "Found TensorFlow: (found suitable exact version \"${TensorFlow_VERSION}\")")
+  message(STATUS "TensorFlow-ABI is ${TensorFlow_ABI}")
+  message(STATUS "TensorFlow-INCLUDE_DIR is ${TensorFlow_INCLUDE_DIR}")
+  message(STATUS "TensorFlow-LIBRARY is ${TensorFlow_LIBRARY}")
+
+  add_definitions("-DTENSORFLOW_ABI=${TensorFlow_ABI}")
+  add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
 else()
   set(TENSORFLOW_FOUND FALSE)
-
 endif()
 
 # export TENSORFLOW_SOURCE_DIR=/graphics/opt/opt_Ubuntu16.04/tensorflow/src
 # detect TensorFlow git repository
 set(TENSORFLOW_HAS_SOURCE FALSE)
-set(TENSORFLOW_SOURCE_DIR "")
+set(TensorFlow_SOURCE_DIR "")
 if(EXISTS "$ENV{TENSORFLOW_SOURCE_DIR}/README.md")
   if(EXISTS "$ENV{TENSORFLOW_SOURCE_DIR}/WORKSPACE")
     set(TENSORFLOW_HAS_SOURCE TRUE)
@@ -96,33 +102,33 @@ if(EXISTS "$ENV{TENSORFLOW_SOURCE_DIR}/README.md")
 endif()
 
 if(TENSORFLOW_HAS_SOURCE)
-  set(TENSORFLOW_SOURCE_DIR $ENV{TENSORFLOW_SOURCE_DIR})
-  message(STATUS "TensorFlow-SOURCE-DIRECTORY is ${TENSORFLOW_SOURCE_DIR}")
+  set(TensorFlow_SOURCE_DIR $ENV{TENSORFLOW_SOURCE_DIR})
+  message(STATUS "TensorFlow-SOURCE-DIRECTORY is ${TensorFlow_SOURCE_DIR}")
 else()
   message(STATUS "No TensorFlow source repository detected")
 endif()
 
 # detect libtensorflow_cc.so
 # export TENSORFLOW_BUILD_DIR=/graphics/opt/opt_Ubuntu16.04/tensorflow/build/v1.9.0/
-find_library(TENSORFLOW_C_LIBRARY
+find_library(TensorFlow_C_LIBRARY
   NAMES libtensorflow_cc.so
   PATHS $ENV{TENSORFLOW_BUILD_DIR}
   DOC "TensorFlow CC library." )
 
-if(TENSORFLOW_C_LIBRARY)
-  message(STATUS "TensorFlow-CC-LIBRARY is ${TENSORFLOW_C_LIBRARY}")
+if(TensorFlow_C_LIBRARY)
+  message(STATUS "TensorFlow-CC-LIBRARY is ${TensorFlow_C_LIBRARY}")
 else()
   message(STATUS "No TensorFlow-CC-LIBRARY detected")
 endif()
 
-macro(TENSORFLOW_REQUIRE_C_LIBRARY)
-  if(TENSORFLOW_C_LIBRARY)
+macro(TensorFlow_REQUIRE_C_LIBRARY)
+  if(TensorFlow_C_LIBRARY)
   else()
     message(FATAL_ERROR "Project requires libtensorflow_cc.so, please specify the path in ENV-VAR 'TENSORFLOW_BUILD_DIR'")
   endif()
 endmacro()
 
-macro(TENSORFLOW_REQUIRE_SOURCE)
+macro(TensorFlow_REQUIRE_SOURCE)
   if(TENSORFLOW_HAS_SOURCE)
   else()
     message(FATAL_ERROR "Project requires TensorFlow source directory, please specify the path in ENV-VAR 'TENSORFLOW_SOURCE_DIR'")
@@ -138,15 +144,15 @@ macro(add_tensorflow_operation op_name)
   add_library(${op_name}_op SHARED kernels/${op_name}_op.cc kernels/${op_name}_kernel.cc ops/${op_name}.cc )
 
   set_target_properties(${op_name}_op PROPERTIES PREFIX "")
-  target_link_libraries(${op_name}_op LINK_PUBLIC ${op_name}_op_cu ${TENSORFLOW_LIBRARY})
+  target_link_libraries(${op_name}_op LINK_PUBLIC ${op_name}_op_cu ${TensorFlow_LIBRARY})
 endmacro()
 
 # simplify TensorFlow dependencies
-add_library(TENSORFLOW_DEP INTERFACE)
-TARGET_INCLUDE_DIRECTORIES(TENSORFLOW_DEP INTERFACE ${TENSORFLOW_SOURCE_DIR})
-TARGET_INCLUDE_DIRECTORIES(TENSORFLOW_DEP INTERFACE ${TENSORFLOW_INCLUDE_DIR})
-TARGET_LINK_LIBRARIES(TENSORFLOW_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TENSORFLOW_C_LIBRARY} -Wl,--no-whole-archive)
-TARGET_LINK_LIBRARIES(TENSORFLOW_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TENSORFLOW_LIBRARY} -Wl,--no-whole-archive)
+add_library(TensorFlow_DEP INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP INTERFACE ${TensorFlow_SOURCE_DIR})
+TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP INTERFACE ${TensorFlow_INCLUDE_DIR})
+TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_C_LIBRARY} -Wl,--no-whole-archive)
+TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_LIBRARY} -Wl,--no-whole-archive)
 
 
 include(FindPackageHandleStandardArgs)
@@ -154,8 +160,8 @@ find_package_handle_standard_args(
   TENSORFLOW
   FOUND_VAR TENSORFLOW_FOUND
   REQUIRED_VARS
-    TENSORFLOW_LIBRARY
-    TENSORFLOW_INCLUDE_DIR
+    TensorFlow_LIBRARY
+    TensorFlow_INCLUDE_DIR
   VERSION_VAR
-    TENSORFLOW_VERSION
+    TensorFlow_VERSION
   )

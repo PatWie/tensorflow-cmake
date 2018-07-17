@@ -10,7 +10,7 @@ pipeline:
     image: tensorflow:cuda9-ubuntu16.04-tf1.9
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
-      - TENSORFLOW_BUILD_DIR=/tensorflow/bazel-bin/tensorflow/
+      - TENSORFLOW_BUILD_DIR=/tensorflow_dist
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd inference/cc/
@@ -20,19 +20,39 @@ pipeline:
     image: tensorflow:cuda9-ubuntu16.04-tf1.9
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
-      - TENSORFLOW_BUILD_DIR=/tensorflow/bazel-bin/tensorflow/
+      - TENSORFLOW_BUILD_DIR=/tensorflow_dist
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd inference/c/
       - cmake .
       - make
-  keras:
+  example_keras:
     image: tensorflow:cuda9-ubuntu16.04-tf1.9
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
-      - TENSORFLOW_BUILD_DIR=/tensorflow/bazel-bin/tensorflow/
+      - TENSORFLOW_BUILD_DIR=/tensorflow_dist
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd examples/keras/
       - cmake .
       - make
+  example_simple:
+    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    environment:
+      - TENSORFLOW_SOURCE_DIR=/tensorflow
+      - TENSORFLOW_BUILD_DIR=/tensorflow_dist
+    commands:
+      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+      - cd examples/simple/
+      - cmake .
+      - make
+  # example_resize:
+  #   image: tensorflow:cuda9-ubuntu16.04-tf1.9
+  #   environment:
+  #     - TENSORFLOW_SOURCE_DIR=/tensorflow
+  #     - TENSORFLOW_BUILD_DIR=/tensorflow_dist
+  #   commands:
+  #     - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+  #     - cd examples/resize/
+  #     - cmake .
+  #     - make

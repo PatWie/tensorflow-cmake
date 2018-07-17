@@ -156,3 +156,10 @@ example/tensorflow_config.txt
 
 examples/simple/tensorflow
 examples/resize/tensorflow
+tensorflow_config.txt
+examples/keras/exported
+examples/keras/inference_cc
+examples/resize/opencv_version
+examples/resize/tensorflow_version
+examples/simple/example
+

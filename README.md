@@ -42,7 +42,11 @@ user@host $  ./configure
 user@host $  # ... or whatever options you used here
 user@host $ bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow.so
 user@host $ bazel build -c opt --copt=-mfpmath=both --copt=-msse4.2 --config=cuda //tensorflow:libtensorflow_cc.so
-user@host $ export TENSORFLOW_BUILD_DIR=bazel-bin/tensorflow/
+
+user@host $ export TENSORFLOW_BUILD_DIR=/tensorflow_dist
+user@host $ mkdir ${TENSORFLOW_BUILD_DIR}
+user@host $ cp ${TENSORFLOW_SOURCE_DIR}/bazel-bin/tensorflow/*.so ${TENSORFLOW_BUILD_DIR}/
+user@host $ cp ${TENSORFLOW_SOURCE_DIR}/bazel-genfiles/tensorflow/cc/ops/*.h ${TENSORFLOW_BUILD_DIR}/includes/tensorflow/cc/ops/
 ```
 
 ### 1. Save Model
