@@ -119,11 +119,9 @@ user@host $ ./c/inference_c
 #### Go
 
 ```console
-user@host $ export LIBRARY_PATH=${TensorFlow_GIT_REPO}/bazel-bin/tensorflow:$LIBRARY_PATH
-user@host $ export LD_LIBRARY_PATH=${TensorFlow_GIT_REPO}/bazel-bin/tensorflow:$LD_LIBRARY_PATH
 user@host $ go get github.com/tensorflow/tensorflow/tensorflow/go
 user@host $ cd go
-user@host $ go build inference_go.go
+user@host $ ./build.sh
 user@host $ cd ../
 user@host $ ./inference_go
 
