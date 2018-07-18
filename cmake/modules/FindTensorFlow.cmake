@@ -91,25 +91,6 @@ else()
   set(TENSORFLOW_FOUND FALSE)
 endif()
 
-# export TENSORFLOW_SOURCE_DIR=/graphics/opt/opt_Ubuntu16.04/tensorflow/src
-# detect TensorFlow git repository
-set(TENSORFLOW_HAS_SOURCE FALSE)
-set(TensorFlow_SOURCE_DIR "")
-if(EXISTS "$ENV{TENSORFLOW_SOURCE_DIR}/README.md")
-  if(EXISTS "$ENV{TENSORFLOW_SOURCE_DIR}/WORKSPACE")
-    set(TENSORFLOW_HAS_SOURCE TRUE)
-  endif()
-endif()
-
-if(TENSORFLOW_HAS_SOURCE)
-  set(TensorFlow_SOURCE_DIR $ENV{TENSORFLOW_SOURCE_DIR})
-  message(STATUS "TensorFlow-SOURCE-DIRECTORY is ${TensorFlow_SOURCE_DIR}")
-else()
-  message(STATUS "No TensorFlow source repository detected")
-endif()
-
-# detect libtensorflow_cc.so
-# export TENSORFLOW_BUILD_DIR=/graphics/opt/opt_Ubuntu16.04/tensorflow/build/v1.9.0/
 find_library(TensorFlow_C_LIBRARY
   NAMES libtensorflow_cc.so
   PATHS $ENV{TENSORFLOW_BUILD_DIR}
@@ -121,6 +102,23 @@ else()
   message(STATUS "No TensorFlow-CC-LIBRARY detected")
 endif()
 
+find_path(TensorFlow_SOURCE_DIR
+        NAMES
+        tensorflow/c
+        tensorflow/cc
+        tensorflow/core
+        tensorflow/core/framework
+        tensorflow/core/platform
+        tensorflow/python
+        third_party
+        PATHS $ENV{TENSORFLOW_SOURCE_DIR})
+
+if(TensorFlow_SOURCE_DIR)
+  message(STATUS "TensorFlow-SOURCE-DIRECTORY is ${TensorFlow_SOURCE_DIR}")
+else()
+  message(STATUS "No TensorFlow source repository detected")
+endif()
+
 macro(TensorFlow_REQUIRE_C_LIBRARY)
   if(TensorFlow_C_LIBRARY)
   else()
@@ -129,7 +127,7 @@ macro(TensorFlow_REQUIRE_C_LIBRARY)
 endmacro()
 
 macro(TensorFlow_REQUIRE_SOURCE)
-  if(TENSORFLOW_HAS_SOURCE)
+  if(TensorFlow_SOURCE_DIR)
   else()
     message(FATAL_ERROR "Project requires TensorFlow source directory, please specify the path in ENV-VAR 'TENSORFLOW_SOURCE_DIR'")
   endif()
@@ -165,3 +163,10 @@ find_package_handle_standard_args(
   VERSION_VAR
     TensorFlow_VERSION
   )
+
+mark_as_advanced(TF_INFORMATION_STRING TF_VERSION TF_VERSION_MAJOR TF_VERSION_MINOR TF_VERSION TF_ABI
+                 TF_INCLUDE_DIR TF_LIBRARY
+                 TensorFlow_C_LIBRARY TensorFlow_LIBRARY TensorFlow_SOURCE_DIR TensorFlow_INCLUDE_DIR TensorFlow_ABI)
+
+
+

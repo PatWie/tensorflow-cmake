@@ -1,16 +1,15 @@
-# TensorFlow C++ Collection
-[![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference)
+# TensorFlow CMake/C++ Collection
 
 Just a dead-simple way to run saved models from TensorFlow (>= v1.9.0) in different languages **without** messing around with bazel. All examples are based on CMake.
 
 | example | pip-only dependency | CI-tested | explanation |
 | ------ | ------ | ------ | ------ |
-| [custom operation](./custom_op) | :ballot_box_with_check: | :ballot_box_with_check: | build a custom operation for TensorFLow in C++/CUDA
-| [inference  (C++)](./inference/cc) | | :ballot_box_with_check:| run inference in C++
-| [inference  (C)](./inference/c) | | :ballot_box_with_check:| run inference in C
-| [inference  (Go)](./inference/go) | | :ballot_box_with_check:| run inference in Go
-| [keras cpp-inference example](./examples/keras) |  | :ballot_box_with_check:| run a Keras-model in C++
-| [simple example](./examples/simple) |  | :ballot_box_with_check:| create and run a TensorFLow graph in C++
+| [custom operation](./custom_op) | :ballot_box_with_check: | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference)  | build a custom operation for TensorFLow in C++/CUDA
+| [inference  (C++)](./inference/cc) | | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) | run inference in C++
+| [inference  (C)](./inference/c) | | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) | run inference in C
+| [inference  (Go)](./inference/go) | | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) | run inference in Go
+| [keras cpp-inference example](./examples/keras) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) | run a Keras-model in C++
+| [simple example](./examples/simple) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow_inference/status.svg)](http://ci.patwie.com/PatWie/tensorflow_inference) | create and run a TensorFlow graph in C++
 | [OpenCV example](./examples/resize) |  | | resize an image in TensorFlow with/without OpenCV
 
 
