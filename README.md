@@ -1,4 +1,4 @@
-	# TensorFlow CMake/C++ Collection
+# TensorFlow CMake/C++ Collection
 
 Just a dead-simple way to run saved models from TensorFlow (>= v1.9.0) in different languages **without** messing around with bazel. All contained examples use CMake as the build system.
 
