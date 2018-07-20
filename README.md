@@ -11,7 +11,7 @@ Just a dead-simple way to run saved models from TensorFlow (>= v1.9.0) in differ
 | [event writer](./examples/event_writer) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | write event files for TensorBoard in C++
 | [keras cpp-inference example](./examples/keras) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run a Keras-model in C++
 | [simple example](./examples/simple) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | create and run a TensorFlow graph in C++
-| [OpenCV example](./examples/resize) |  | | resize an image in TensorFlow with/without OpenCV
+| [OpenCV example](./examples/resize) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | resize an image in TensorFlow with/without OpenCV
 
 
 ## Custom Operation
