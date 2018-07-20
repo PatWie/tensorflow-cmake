@@ -46,16 +46,16 @@ pipeline:
       - cd examples/simple/
       - cmake .
       - make
-  # example_resize:
-  #   image: tensorflow:cuda9-ubuntu16.04-tf1.9
-  #   environment:
-  #     - TENSORFLOW_SOURCE_DIR=/tensorflow
-  #     - TENSORFLOW_BUILD_DIR=/tensorflow_dist
-  #   commands:
-  #     - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
-  #     - cd examples/resize/
-  #     - cmake .
-  #     - make
+  example_resize:
+    image: tensorflow:cuda9-opencv3.1-ubuntu16.04-tf1.9
+    environment:
+      - TENSORFLOW_SOURCE_DIR=/tensorflow
+      - TENSORFLOW_BUILD_DIR=/tensorflow_dist
+    commands:
+      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+      - cd examples/resize/
+      - cmake .
+      - make
   event_writer:
     image: tensorflow:cuda9-ubuntu16.04-tf1.9
     environment:
