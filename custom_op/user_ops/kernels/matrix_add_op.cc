@@ -24,6 +24,10 @@ class MatrixAddOp: public OpKernel {
     const Tensor& mA = ctx->input(0);
     const Tensor& mB = ctx->input(1);
 
+    if (!ctx->status().ok()) {
+      return;
+    }
+
     OP_REQUIRES(ctx, mA.shape() == mB.shape(), errors::InvalidArgument("Input shapes have to be the same"));
 
     const int B = mA.dim_size(0);
@@ -38,7 +42,7 @@ class MatrixAddOp: public OpKernel {
     OP_REQUIRES_OK(ctx, ctx->allocate_output(0, output_shape, &mC));
     // same as "OP_REQUIRES_OK(ctx,ctx->allocate_output(0, mA.tensor<Dtype, 4>().shape(), &mC));"
 
-    ::tensorflow::functor::MatrixAddFunctor<Device, Dtype>()(ctx,
+    ::tensorflow::functor::MatrixAddFunctor<Device, Dtype>::launch(ctx,
         mA, mB, mC, bias_);
   }
 
@@ -61,12 +65,16 @@ class MatrixAddGradOp: public OpKernel {
     const Tensor& mB = ctx->input(1);
     const Tensor& topdiff = ctx->input(2);
 
+    if (!ctx->status().ok()) {
+      return;
+    }
+
     Tensor* grad_mA = nullptr;
     Tensor* grad_mB = nullptr;
     OP_REQUIRES_OK(ctx, ctx->allocate_output(0, mA.shape(), &grad_mA));
     OP_REQUIRES_OK(ctx, ctx->allocate_output(1, mB.shape(), &grad_mB));
 
-    ::tensorflow::functor::MatrixAddGrad<Device, Dtype>()(ctx,
+    ::tensorflow::functor::MatrixAddGrad<Device, Dtype>::launch(ctx,
         topdiff, grad_mA, grad_mB);
   }
 };

@@ -18,7 +18,7 @@ Status UnchangedShape(InferenceContext* c) {
 
 REGISTER_OP("MatrixAdd")
 .Attr("bias: float")
-.Attr("T: realnumbertype")
+.Attr("T: realnumbertype = DT_FLOAT")
 .Input("matrix_a: T")
 .Input("matrix_b: T")
 .Output("output: T")

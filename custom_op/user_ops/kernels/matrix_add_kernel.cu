@@ -48,11 +48,11 @@ namespace functor {
 
 template <typename Dtype>
 struct MatrixAddFunctor<GPUDevice, Dtype> {
-  void operator ()(::tensorflow::OpKernelContext* ctx,
-                   const Tensor& mA_,
-                   const Tensor& mB_,
-                   Tensor *mC_,
-                   Dtype bias) {
+  static void launch(::tensorflow::OpKernelContext* ctx,
+                     const Tensor& mA_,
+                     const Tensor& mB_,
+                     Tensor *mC_,
+                     Dtype bias) {
     const int N = mA_.NumElements();
 
     ::tensorflow::CudaLaunchConfig cfg =
@@ -67,6 +67,10 @@ struct MatrixAddFunctor<GPUDevice, Dtype> {
       mB_.flat<Dtype>().data(),
       bias);
 
+    if (!ctx->eigen_gpu_device().ok()) {
+      ctx->SetStatus(tensorflow::errors::Internal("Failed launching MatrixAdd on GPU"));
+    }
+
   }
 };
 
@@ -77,10 +81,10 @@ template struct MatrixAddFunctor<GPUDevice, double>;
 
 template <typename Dtype>
 struct MatrixAddGrad<GPUDevice, Dtype> {
-  void operator ()(::tensorflow::OpKernelContext* ctx,
-                   const Tensor& topdiff_,
-                   Tensor *grad_mA_,
-                   Tensor *grad_mB_) {
+  static void launch(::tensorflow::OpKernelContext* ctx,
+                     const Tensor& topdiff_,
+                     Tensor *grad_mA_,
+                     Tensor *grad_mB_) {
 
     const int N = topdiff_.NumElements();
 
@@ -102,6 +106,10 @@ struct MatrixAddGrad<GPUDevice, Dtype> {
     // faster alternative to custom kernel (above)
     cudaMemcpy(grad_mA_->flat<Dtype>().data(), topdiff_.flat<Dtype>().data(), N * sizeof(Dtype), cudaMemcpyDeviceToDevice);
     cudaMemcpy(grad_mB_->flat<Dtype>().data(), topdiff_.flat<Dtype>().data(), N * sizeof(Dtype), cudaMemcpyDeviceToDevice);
+
+    if (!ctx->eigen_gpu_device().ok()) {
+      ctx->SetStatus(tensorflow::errors::Internal("Failed launching MatrixAddGrad on GPU"));
+    }
 
   }
 };

@@ -11,11 +11,11 @@ namespace functor {
 
 template <typename Dtype>
 struct MatrixAddFunctor<CPUDevice, Dtype> {
-  void operator ()(::tensorflow::OpKernelContext* ctx,
-                   const Tensor& mA_,
-                   const Tensor& mB_,
-                   Tensor *mC_,
-                   Dtype bias) {
+  static void launch(::tensorflow::OpKernelContext* ctx,
+                     const Tensor& mA_,
+                     const Tensor& mB_,
+                     Tensor *mC_,
+                     Dtype bias) {
     auto mA = mA_.tensor<Dtype, 4>();
     auto mB = mB_.tensor<Dtype, 4>();
     auto mC = mC_->tensor<Dtype, 4>();
@@ -44,10 +44,10 @@ template struct MatrixAddFunctor<CPUDevice, double>;
 
 template <typename Dtype>
 struct MatrixAddGrad<CPUDevice, Dtype> {
-  void operator ()(::tensorflow::OpKernelContext* ctx,
-                   const Tensor& topdiff_,
-                   Tensor *grad_mA_,
-                   Tensor *grad_mB_) {
+  static void launch(::tensorflow::OpKernelContext* ctx,
+                     const Tensor& topdiff_,
+                     Tensor *grad_mA_,
+                     Tensor *grad_mB_) {
     const int N = topdiff_.NumElements();
 
     grad_mA_->flat<Dtype>().setZero();
