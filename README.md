@@ -11,7 +11,7 @@ Just a dead-simple way to run saved models from TensorFlow (>= v1.9.0) in differ
 | [event writer](./examples/event_writer) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | write event files for TensorBoard in C++
 | [keras cpp-inference example](./examples/keras) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run a Keras-model in C++
 | [simple example](./examples/simple) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | create and run a TensorFlow graph in C++
-| [OpenCV example](./examples/resize) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | resize an image in TensorFlow with/without OpenCV
+| [resize image example](./examples/resize) |  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | resize an image in TensorFlow with/without OpenCV
 
 
 ## Custom Operation
@@ -27,6 +27,19 @@ user@host $ python test_matrix_add.py
 user@host $ cd ..
 user@host $ python example.py
 ```
+
+## Resize example
+
+This example illustrates the process of loading an image (using OpenCV or TensorFlow), resizing the image by nearest neighbor upsampling and saving the image as a JPG (using OpenCV or TensorFlow).
+
+```console
+user@host $ cd examples/resize
+user@host $ export TENSORFLOW_BUILD_DIR=...
+user@host $ export TENSORFLOW_SOURCE_DIR=...
+user@host $ cmake .
+user@host $ make
+```
+
 ## Inference
 
 This example creates a model in Python, saves the graph to disk and loads it in C/C+/Go/Python to perform inference. As these examples are based on the TensorFlow C-API they require the `libtensorflow_cc.so` library which is *not* shipped in the pip-package (tensorfow-gpu). Hence, you will need to build TensorFlow from source beforehand, e.g.,
