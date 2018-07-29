@@ -26,6 +26,19 @@ pipeline:
       - cd inference/c/
       - cmake .
       - make
+  inference_go:
+    image: tensorflow:cuda9-go-ubuntu16.04-tf1.9
+    environment:
+      - TENSORFLOW_SOURCE_DIR=/tensorflow
+      - TENSORFLOW_BUILD_DIR=/tensorflow_dist
+    commands:
+      - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
+      - export LD_LIBRARY_PATH=/tensorflow_dist:$${LD_LIBRARY_PATH}
+      - export LD_LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LD_LIBRARY_PATH}
+      - export LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LIBRARY_PATH}
+      - go get github.com/tensorflow/tensorflow/tensorflow/go
+      - cd inference/go/
+      - ./build.sh
   example_keras:
     image: tensorflow:cuda9-ubuntu16.04-tf1.9
     environment:
