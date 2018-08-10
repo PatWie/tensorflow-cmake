@@ -1,9 +1,8 @@
-// ComputerGraphics Tuebingen, 2018
+// 2018, Patrick Wieschollek <mail@patwie.com>
 
 #include "tensorflow/core/framework/op.h"
 #include "tensorflow/core/framework/op_kernel.h"
-
-#include <stdio.h>
+#include "tensorflow/core/framework/register_types.h"
 
 #include "matrix_add_op.h"
 
@@ -80,22 +79,40 @@ class MatrixAddGradOp: public OpKernel {
 };
 
 
-#define OPNAME(NAME) NAME ## Op
-#define REGISTER(NAME, Dtype)                                          \
-  REGISTER_KERNEL_BUILDER(                                             \
-      Name(#NAME).Device(DEVICE_CPU).TypeConstraint<Dtype>("T"),       \
-      OPNAME(NAME)<CPUDevice, Dtype>);                                 \
-  REGISTER_KERNEL_BUILDER(                                             \
-      Name(#NAME).Device(DEVICE_GPU).TypeConstraint<Dtype>("T"),       \
-      OPNAME(NAME)<GPUDevice, Dtype>);
+// Register the CPU kernels.
+#define REGISTER_MATRIXADD_OP_CPU(T)                                     \
+  REGISTER_KERNEL_BUILDER(                                               \
+      Name("MatrixAdd").Device(DEVICE_CPU).TypeConstraint<T>("T"),       \
+      MatrixAddOp<CPUDevice, T>)
 
+#define REGISTER_MATRIXADD_GRAD_OP_CPU(T)                                \
+  REGISTER_KERNEL_BUILDER(                                               \
+      Name("MatrixAddGrad").Device(DEVICE_CPU).TypeConstraint<T>("T"),   \
+      MatrixAddGradOp<CPUDevice, T>)
 
-REGISTER(MatrixAdd, int);
-REGISTER(MatrixAdd, float);
-REGISTER(MatrixAdd, double);
-REGISTER(MatrixAddGrad, float);
-REGISTER(MatrixAddGrad, double);
+// see "tensorflow/core/framework/register_types.h"
+TF_CALL_uint32(REGISTER_MATRIXADD_OP_CPU);
+TF_CALL_int32(REGISTER_MATRIXADD_OP_CPU);
+TF_CALL_double(REGISTER_MATRIXADD_OP_CPU);
+TF_CALL_float(REGISTER_MATRIXADD_OP_CPU);
 
+TF_CALL_double(REGISTER_MATRIXADD_GRAD_OP_CPU);
+TF_CALL_float(REGISTER_MATRIXADD_GRAD_OP_CPU);
+#undef REGISTER_MATRIXADD_OP_CPU
+#undef REGISTER_MATRIXADD_GRAD_OP_CPU
 
+// Register the GPU kernels.
+#ifdef GOOGLE_CUDA
+#define REGISTER_MATRIXADD_OP_GPU(T)                                     \
+  REGISTER_KERNEL_BUILDER(                                               \
+      Name("MatrixAdd").Device(DEVICE_GPU).TypeConstraint<T>("T"),       \
+      MatrixAddOp<GPUDevice, T>)                                         \
+  REGISTER_KERNEL_BUILDER(                                               \
+      Name("MatrixAddGrad").Device(DEVICE_GPU).TypeConstraint<T>("T"),   \
+      MatrixAddGradOp<GPUDevice, T>)
+
+TF_CALL_GPU_NUMBER_TYPES_NO_HALF(REGISTER_MATRIXADD_OP_GPU);
+#undef REGISTER_MATRIXADD_OP_GPU
+#endif  // GOOGLE_CUDA
 
 }  // namespace tensorflow

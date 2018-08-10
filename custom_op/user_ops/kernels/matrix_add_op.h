@@ -1,4 +1,4 @@
-// ComputerGraphics Tuebingen, 2018
+// 2018, Patrick Wieschollek <mail@patwie.com>
 
 #ifndef MATRIX_ADD_KERNELS_MATRIX_ADD_OP_H_
 #define MATRIX_ADD_KERNELS_MATRIX_ADD_OP_H_
@@ -6,15 +6,10 @@
 #include "tensorflow/core/framework/op_kernel.h"
 
 namespace tensorflow {
-class OpKernelContext;
-class Tensor;
 
-using CPUDevice = Eigen::ThreadPoolDevice;
-using GPUDevice = Eigen::GpuDevice;
-}
+typedef Eigen::ThreadPoolDevice CPUDevice;
+typedef Eigen::GpuDevice GPUDevice;
 
-
-namespace tensorflow {
 namespace functor {
 
 template <typename Device, typename Dtype>

@@ -1,4 +1,4 @@
-// ComputerGraphics Tuebingen, 2017
+// 2018, Patrick Wieschollek <mail@patwie.com>
 
 #include <cstring>
 
@@ -6,7 +6,6 @@
 #include "matrix_add_op.h"
 
 namespace tensorflow {
-
 namespace functor {
 
 template <typename Dtype>
@@ -16,8 +15,8 @@ struct MatrixAddFunctor<CPUDevice, Dtype> {
                      const Tensor& mB_,
                      Tensor *mC_,
                      Dtype bias) {
-    auto mA = mA_.tensor<Dtype, 4>();
-    auto mB = mB_.tensor<Dtype, 4>();
+    const auto mA = mA_.tensor<Dtype, 4>();
+    const auto mB = mB_.tensor<Dtype, 4>();
     auto mC = mC_->tensor<Dtype, 4>();
 
     mC.setZero();
@@ -37,7 +36,8 @@ struct MatrixAddFunctor<CPUDevice, Dtype> {
   }
 };
 
-template struct MatrixAddFunctor<CPUDevice, int>;
+template struct MatrixAddFunctor<CPUDevice, int32>;
+template struct MatrixAddFunctor<CPUDevice, uint32>;
 template struct MatrixAddFunctor<CPUDevice, float>;
 template struct MatrixAddFunctor<CPUDevice, double>;
 

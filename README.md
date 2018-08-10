@@ -1,17 +1,17 @@
 # TensorFlow CMake/C++ Collection
 
-Just a dead-simple way to run saved models from TensorFlow (>= v1.9.0) in different languages **without** messing around with bazel. All contained examples use CMake as the build system.
+Just a dead-simple way to run saved models from TensorFlow (v1.10.0) in different languages **without** messing around with bazel. All contained examples use CMake as the build system.
 
 | example| CI-tested | explanation
 | ------ | ------ | ------ |
-| [custom operation](./custom_op)  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake)  | build a custom operation for TensorFLow in C++/CUDA (requires only pip)
-| [inference  (C++)](./inference/cc) | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in C++
-| [inference  (C)](./inference/c) | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in C
-| [inference  (Go)](./inference/go) |  [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in Go
-| [event writer](./examples/event_writer)  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | write event files for TensorBoard in C++
-| [keras cpp-inference example](./examples/keras)  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run a Keras-model in C++
-| [simple example](./examples/simple)  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | create and run a TensorFlow graph in C++
-| [resize image example](./examples/resize)  | [![Build Status TensorFlow v1.9 ](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | resize an image in TensorFlow with/without OpenCV
+| [custom operation](./custom_op)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake)  | build a custom operation for TensorFLow in C++/CUDA (requires only pip)
+| [inference  (C++)](./inference/cc) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in C++
+| [inference  (C)](./inference/c) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in C
+| [inference  (Go)](./inference/go) |  [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in Go
+| [event writer](./examples/event_writer)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | write event files for TensorBoard in C++
+| [keras cpp-inference example](./examples/keras)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run a Keras-model in C++
+| [simple example](./examples/simple)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | create and run a TensorFlow graph in C++
+| [resize image example](./examples/resize)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | resize an image in TensorFlow with/without OpenCV
 
 
 ## Custom Operation
