@@ -1,5 +1,6 @@
 # Patrick Wieschollek, <mail@patwie.com>
-# FindTENSORFLOW
+# FindTENSORFLOW.cmake
+# https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake
 # -------------
 # https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake
 #
@@ -31,9 +32,9 @@
 # ------
 # add "list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}../../path/to/this/file)" to your project
 #
-# "add_tensorflow_operation" is a macro to compile a custom operation
+# "add_tensorflow_gpu_operation" is a macro to compile a custom operation
 #
-# add_tensorflow_operation("<op-name>") expects the following files to exists:
+# add_tensorflow_gpu_operation("<op-name>") expects the following files to exists:
 #   - kernels/<op-name>_kernel.cc
 #   - kernels/<op-name>_kernel.cu
 #   - kernels/<op-name>_op.cc
@@ -146,13 +147,26 @@ macro(add_tensorflow_operation op_name)
   target_link_libraries(${op_name}_op LINK_PUBLIC ${op_name}_op_cu ${TensorFlow_LIBRARY})
 endmacro()
 
+
+macro(add_tensorflow_gpu_operation op_name)
+  message(STATUS "will build custom TensorFlow operation \"${op_name}\"")
+
+  cuda_add_library(${op_name}_op_cu SHARED kernels/${op_name}_kernel.cu)
+  set_target_properties(${op_name}_op_cu PROPERTIES PREFIX "")
+
+  add_library(${op_name}_op SHARED kernels/${op_name}_op.cc kernels/${op_name}_kernel.cc ops/${op_name}.cc )
+
+  set_target_properties(${op_name}_op PROPERTIES PREFIX "")
+  set_target_properties(${op_name}_op PROPERTIES COMPILE_FLAGS "-DGOOGLE_CUDA")
+  target_link_libraries(${op_name}_op LINK_PUBLIC ${op_name}_op_cu ${TensorFlow_LIBRARY})
+endmacro()
+
 # simplify TensorFlow dependencies
 add_library(TensorFlow_DEP INTERFACE)
 TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP INTERFACE ${TensorFlow_SOURCE_DIR})
 TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP INTERFACE ${TensorFlow_INCLUDE_DIR})
 TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_C_LIBRARY} -Wl,--no-whole-archive)
 TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_LIBRARY} -Wl,--no-whole-archive)
-
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(

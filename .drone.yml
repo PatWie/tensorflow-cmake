@@ -1,13 +1,13 @@
 pipeline:
   custom_op:
-    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd custom_op/user_ops
       - cmake .
       - make
   inference_cc:
-    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -17,7 +17,7 @@ pipeline:
       - cmake .
       - make
   inference_c:
-    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -27,7 +27,7 @@ pipeline:
       - cmake .
       - make
   inference_go:
-    image: tensorflow:cuda9-go-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0-go1.10
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -40,7 +40,7 @@ pipeline:
       - cd inference/go/
       - ./build.sh
   example_keras:
-    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -50,7 +50,7 @@ pipeline:
       - cmake .
       - make
   example_simple:
-    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -60,7 +60,7 @@ pipeline:
       - cmake .
       - make
   example_resize:
-    image: tensorflow:cuda9-opencv3.1-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0-opencv3.4.2
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -70,7 +70,7 @@ pipeline:
       - cmake .
       - make
   event_writer:
-    image: tensorflow:cuda9-ubuntu16.04-tf1.9
+    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
