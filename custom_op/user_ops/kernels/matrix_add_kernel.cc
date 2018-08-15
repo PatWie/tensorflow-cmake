@@ -2,19 +2,16 @@
 
 #include <cstring>
 
-#include "tensorflow/core/framework/op.h"
 #include "matrix_add_op.h"
+#include "tensorflow/core/framework/op.h"
 
 namespace tensorflow {
 namespace functor {
 
 template <typename Dtype>
 struct MatrixAddFunctor<CPUDevice, Dtype> {
-  static void launch(::tensorflow::OpKernelContext* ctx,
-                     const Tensor& mA_,
-                     const Tensor& mB_,
-                     Tensor *mC_,
-                     Dtype bias) {
+  static void launch(::tensorflow::OpKernelContext* ctx, const Tensor& mA_,
+                     const Tensor& mB_, Tensor* mC_, Dtype bias) {
     const auto mA = mA_.tensor<Dtype, 4>();
     const auto mB = mB_.tensor<Dtype, 4>();
     auto mC = mC_->tensor<Dtype, 4>();
@@ -41,13 +38,10 @@ template struct MatrixAddFunctor<CPUDevice, uint32>;
 template struct MatrixAddFunctor<CPUDevice, float>;
 template struct MatrixAddFunctor<CPUDevice, double>;
 
-
 template <typename Dtype>
 struct MatrixAddGrad<CPUDevice, Dtype> {
-  static void launch(::tensorflow::OpKernelContext* ctx,
-                     const Tensor& topdiff_,
-                     Tensor *grad_mA_,
-                     Tensor *grad_mB_) {
+  static void launch(::tensorflow::OpKernelContext* ctx, const Tensor& topdiff_,
+                     Tensor* grad_mA_, Tensor* grad_mB_) {
     const int N = topdiff_.NumElements();
 
     grad_mA_->flat<Dtype>().setZero();
@@ -69,6 +63,5 @@ struct MatrixAddGrad<CPUDevice, Dtype> {
 template struct MatrixAddGrad<CPUDevice, float>;
 template struct MatrixAddGrad<CPUDevice, double>;
 
-
-} // namespace functor
-} // namespace tensorflow
+}  // namespace functor
+}  // namespace tensorflow
