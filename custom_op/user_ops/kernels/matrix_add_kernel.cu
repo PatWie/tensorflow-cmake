@@ -1,4 +1,4 @@
-// ComputerGraphics Tuebingen, 2018
+// 2018, Patrick Wieschollek <mail@patwie.com>
 
 #if GOOGLE_CUDA
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# ComputerGraphics Tuebingen, 2018
+# 2018, Patrick Wieschollek <mail@patwie.com>
 
 import numpy as np
 import tensorflow as tf

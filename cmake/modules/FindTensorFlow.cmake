@@ -2,7 +2,6 @@
 # FindTENSORFLOW.cmake
 # https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake
 # -------------
-# https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake
 #
 # Find TensorFlow library and includes
 #
