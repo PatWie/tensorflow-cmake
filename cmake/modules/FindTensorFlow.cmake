@@ -145,7 +145,7 @@ endmacro()
 
 
 macro(add_tensorflow_gpu_operation op_name)
-  message(STATUS "will build custom TensorFlow operation \"${op_name}\"")
+  message(STATUS "will build custom TensorFlow operation \"${op_name}\" (CPU+GPU)")
 
   cuda_add_library(${op_name}_op_cu SHARED kernels/${op_name}_kernel.cu)
   # A CMAKE issue, we cannot used _gpu.cu.cc
