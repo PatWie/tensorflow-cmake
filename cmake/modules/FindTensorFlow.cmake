@@ -135,15 +135,12 @@ macro(TensorFlow_REQUIRE_SOURCE)
 endmacro()
 
 macro(add_tensorflow_operation op_name)
-  message(STATUS "will build custom TensorFlow operation \"${op_name}\"")
-
-  cuda_add_library(${op_name}_op_cu SHARED kernels/${op_name}_kernel.cu)
-  set_target_properties(${op_name}_op_cu PROPERTIES PREFIX "")
+  message(STATUS "will build custom TensorFlow operation \"${op_name}\" (CPU only)")
 
   add_library(${op_name}_op SHARED kernels/${op_name}_op.cc kernels/${op_name}_kernel.cc ops/${op_name}.cc )
 
   set_target_properties(${op_name}_op PROPERTIES PREFIX "")
-  target_link_libraries(${op_name}_op LINK_PUBLIC ${op_name}_op_cu ${TensorFlow_LIBRARY})
+  target_link_libraries(${op_name}_op LINK_PUBLIC ${TensorFlow_LIBRARY})
 endmacro()
 
 
@@ -151,6 +148,8 @@ macro(add_tensorflow_gpu_operation op_name)
   message(STATUS "will build custom TensorFlow operation \"${op_name}\"")
 
   cuda_add_library(${op_name}_op_cu SHARED kernels/${op_name}_kernel.cu)
+  # A CMAKE issue, we cannot used _gpu.cu.cc
+  # cuda_add_library(${op_name}_op_cu SHARED kernels/${op_name}_kernel_gpu.cu.cc)
   set_target_properties(${op_name}_op_cu PROPERTIES PREFIX "")
 
   add_library(${op_name}_op SHARED kernels/${op_name}_op.cc kernels/${op_name}_kernel.cc ops/${op_name}.cc )
