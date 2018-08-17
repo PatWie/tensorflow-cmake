@@ -1,6 +1,7 @@
 # TensorFlow CMake/C++ Collection
 
-Starring at the official docs: What do you see? The usual fare? Guess what: Instead, we use CMake here!
+Looking at the official docs: What do you see? The usual fare?
+Now, guess what: This is a bazel-free zone. We use CMake here!
 
 This collection contains **reliable** and **dead-simple** examples to use TensorFlow in C, C++, Go and Python: load a pre-trained model or compile a custom operation with or without CUDA. All builds are tested against the most recent stable TensorFlow version (v1.10.0) and rely on CMake with a custom [FindTensorFlow.cmake](https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake).
 
