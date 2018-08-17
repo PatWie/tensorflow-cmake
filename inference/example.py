@@ -17,13 +17,13 @@ with tf.Session() as sess:
     tf.train.write_graph(sess.graph, '.', "./exported/graph.pb_txt", as_text=True)
 
     t1 = tf.get_default_graph().get_tensor_by_name('output:0')
-    t2 = tf.get_default_graph().get_tensor_by_name('dense/kernel:0');
+    t2 = tf.get_default_graph().get_tensor_by_name('dense/kernel:0')
     t3 = tf.get_default_graph().get_tensor_by_name('dense/bias:0')
 
     t1, t2, t3, x = sess.run([t1, t2, t3, x], {x: val})
 
-    print tf.global_variables()
-    print "input           " ,x
-    print "output          " ,t1
-    print "dense/kernel:0  " ,t2
-    print "dense/bias:0    " ,t3
+    print(tf.global_variables())
+    print("input           ", x)
+    print("output          ", t1)
+    print("dense/kernel:0  ", t2)
+    print("dense/bias:0    ", t3)

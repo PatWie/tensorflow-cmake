@@ -11,7 +11,6 @@ with tf.Session() as sess:
     filename_tensor_name = metaGraph.as_saver_def().filename_tensor_name
     sess.run(restore_op, {filename_tensor_name: './exported/my_model'})
 
-
     x = tf.get_default_graph().get_tensor_by_name('input:0')
     t1 = tf.get_default_graph().get_tensor_by_name('output:0')
     t2 = tf.get_default_graph().get_tensor_by_name('dense/kernel:0')

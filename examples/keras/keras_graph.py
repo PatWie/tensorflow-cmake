@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 sess = tf.Session()
 
-from keras import backend as K
+from keras import backend as K  # noqa
 K.set_session(sess)
 
 
