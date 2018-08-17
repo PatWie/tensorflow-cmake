@@ -1,6 +1,8 @@
 # TensorFlow CMake/C++ Collection
 
-Just a dead-simple way to run saved models from TensorFlow (v1.10.0) in different languages **without** messing around with bazel. All contained examples use CMake as the build system.
+Starring at the official docs: What do you see? The usual fare? Guess what: Instead, we use CMake here!
+
+This collection contains **reliable** and **dead-simple** examples to use TensorFlow in C, C++, Go and Python: load a pre-trained model or compile a custom operation with or without CUDA. All builds are tested against the most recent stable TensorFlow version (v1.10.0) and rely on CMake with a custom [FindTensorFlow.cmake](https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake).
 
 | example| CI-tested | explanation
 | ------ | ------ | ------ |
@@ -19,7 +21,7 @@ Just a dead-simple way to run saved models from TensorFlow (v1.10.0) in differen
 This example illustrates the process of creating a custom operation using C++/CUDA and CMake. It is *not* intended to show an implementation obtaining peak-performance. Instead, it is just a boilerplate-template.
 
 ```console
-user@host $ pip install tensorflow-gpu --user # just the pip package is needed
+user@host $ pip install tensorflow-gpu --user # solely the pip package is needed
 user@host $ cd custom_op/user_ops
 user@host $ cmake .
 user@host $ make
@@ -30,7 +32,7 @@ user@host $ python example.py
 
 ## Resize example
 
-This example illustrates the process of loading an image (using OpenCV or TensorFlow), resizing the image by nearest neighbor upsampling and saving the image as a JPG (using OpenCV or TensorFlow).
+This example illustrates the process of loading an image (using OpenCV or TensorFlow), resizing the image  saving the image as a JPG or PNG (using OpenCV or TensorFlow).
 
 ```console
 user@host $ cd examples/resize
@@ -42,7 +44,7 @@ user@host $ make
 
 ## Inference
 
-This example creates a model in Python, saves the graph to disk and loads it in C/C+/Go/Python to perform inference. As these examples are based on the TensorFlow C-API they require the `libtensorflow_cc.so` library which is *not* shipped in the pip-package (tensorfow-gpu). Hence, you will need to build TensorFlow from source beforehand, e.g.,
+Create a model in Python, save the graph to disk and load it in C/C+/Go/Python to perform inference. As these examples are based on the TensorFlow C-API they require the `libtensorflow_cc.so` library which is *not* shipped in the pip-package (tensorfow-gpu). Hence, you will need to build TensorFlow from source beforehand, e.g.,
 
 ```console
 user@host $ ls ${TENSORFLOW_SOURCE_DIR}

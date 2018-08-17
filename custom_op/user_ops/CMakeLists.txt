@@ -9,7 +9,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}../../cmake/modules)
 project(TFCustomOp)
 
 find_package(TensorFlow REQUIRED)
-find_package(CUDA 9.2 EXACT REQUIRED)
+find_package(CUDA 9 REQUIRED)
 
 # set necessary flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SSE_FLAGS} -march=native -fopenmp -D_GLIBCXX_USE_CXX11_ABI=${TensorFlow_ABI}")
