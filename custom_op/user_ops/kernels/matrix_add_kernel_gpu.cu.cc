@@ -13,18 +13,20 @@ namespace {
 using CudaLaunchConfig = ::tensorflow::CudaLaunchConfig;
 
 template <typename T>
-__global__ void forward(CudaLaunchConfig cfg, T* top, const int N,
-                        const T* matrixA, const T* matrixB, const T bias) {
+__global__ void forward(CudaLaunchConfig cfg, T* __restrict__ Z, const int N,
+                        const T* __restrict__ X, const T* __restrict__ Y,
+                        const T bias) {
   // for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < N; i += blockDim.x
   // * gridDim.x) {
   for (int i : CudaGridRangeX(cfg.virtual_thread_count)) {
-    top[i] = matrixA[i] + matrixB[i] + (T)bias;
+    Z[i] = X[i] + Y[i] + (T)bias;
   }
 }
 
 template <typename T>
-__global__ void backward(CudaLaunchConfig cfg, const T* top_diff, const int N,
-                         T* grad_matrixA, T* grad_matrixB) {
+__global__ void backward(CudaLaunchConfig cfg, const T* __restrict__ top_diff,
+                         const int N, T* __restrict__ grad_matrixA,
+                         T* __restrict__ grad_matrixB) {
   // for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < N; i += blockDim.x
   // * gridDim.x) {
   for (int i : CudaGridRangeX(cfg.virtual_thread_count)) {

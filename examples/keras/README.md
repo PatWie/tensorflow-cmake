@@ -3,7 +3,6 @@
 ## Compile (once)
 
 ```bash
-python configure.py
 cmake .
 make
 ```

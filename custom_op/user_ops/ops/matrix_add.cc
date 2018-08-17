@@ -5,21 +5,21 @@
 
 namespace tensorflow {
 
-using ::tensorflow::shape_inference::ShapeHandle;
 using ::tensorflow::shape_inference::InferenceContext;
+using ::tensorflow::shape_inference::ShapeHandle;
 
 namespace shape_inference {
 Status UnchangedShape(InferenceContext* c) {
   c->set_output(0, c->input(0));
   return Status::OK();
 }
-} /* shape_inference */
+}  // namespace shape_inference
 
 REGISTER_OP("MatrixAdd")
     .Attr("bias: float")
     .Attr("T: realnumbertype = DT_FLOAT")
-    .Input("a: T")
-    .Input("b: T")
+    .Input("x: T")
+    .Input("y: T")
     .Output("output: T")
     .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) {
       // we require the input to have 4 axes
@@ -27,20 +27,20 @@ REGISTER_OP("MatrixAdd")
       TF_RETURN_IF_ERROR(c->WithRank(c->input(0), 4, &shape_hnd));
       TF_RETURN_IF_ERROR(c->WithRank(c->input(1), 4, &shape_hnd));
 
-      ShapeHandle a_shape = c->input(0);
-      ShapeHandle b_shape = c->input(1);
+      ShapeHandle x_shape = c->input(0);
+      ShapeHandle y_shape = c->input(1);
 
-      // assert shapes of a and b are matching
-      TF_RETURN_IF_ERROR(c->Merge(a_shape, b_shape, &a_shape));
+      // assert shapes of x and y are matching
+      TF_RETURN_IF_ERROR(c->Merge(x_shape, y_shape, &x_shape));
 
       // specify output-shape
-      // this could be "c->set_output(0, a_shape);"
+      // this could be "c->set_output(0, x_shape);"
       // but we do it explicitly
-      auto B = c->Dim(c->input(0), 0);
-      auto M = c->Dim(c->input(0), 1);
-      auto N = c->Dim(c->input(0), 2);
+      auto N = c->Dim(c->input(0), 0);
+      auto H = c->Dim(c->input(0), 1);
+      auto W = c->Dim(c->input(0), 2);
       auto C = c->Dim(c->input(0), 3);
-      c->set_output(0, c->MakeShape({B, M, N, C}));
+      c->set_output(0, c->MakeShape({N, H, W, C}));
 
       // we can also use the Attr here
       float bias;
@@ -51,29 +51,29 @@ REGISTER_OP("MatrixAdd")
     .Doc(R"doc(
 Add two matrices and a constant
 
-This computes `A`+`B`+`bias` for two matrices.
+This computes `x`+`y`+`bias` for two matrices.
 
-a: A batch of matrices [B, M, N, C].
-b: A batch of matrices [B, M, N, C].
+x: A batch of matrices [N, H, W, C].
+y: A batch of matrices [N, H, W, C].
 bias: An additional constant term.
-output: A batch of matrices [B, M, N, C] containing the sum plus bias.
+output: A batch of matrices [N, H, W, C] containing the sum plus bias.
 )doc");
 
 REGISTER_OP("MatrixAddGrad")
     .Attr("bias: float")
-    .Input("a: T")
-    .Input("b: T")
+    .Input("x: T")
+    .Input("y: T")
     .Input("gradients: T")
     .Output("grad_a: T")
     .Output("grad_matrix_b: T")
     .Attr("T: realnumbertype")
     .SetShapeFn([](InferenceContext* c) {
-      c->set_output(0, c->input(0));  // grad_a has same shape as a
-      c->set_output(1, c->input(1));  // grad_b has same shape as b
+      c->set_output(0, c->input(0));  // grad_a has same shape as x
+      c->set_output(1, c->input(1));  // grad_b has same shape as y
       return ::tensorflow::Status::OK();
     })
     .Doc(R"doc(
-Returns gradients of "a + b + bias".
+Returns gradients of "x + y + bias".
 )doc");
 
-} /* tensorflow */
+}  // namespace tensorflow
