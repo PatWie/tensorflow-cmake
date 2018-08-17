@@ -45,8 +45,14 @@ message(STATUS "Detecting TensorFlow info")
 execute_process(
   COMMAND python -c "import tensorflow as tf; print(tf.__version__); print(tf.__cxx11_abi_flag__); print(tf.sysconfig.get_include()); print(tf.sysconfig.get_lib() + '/libtensorflow_framework.so')"
   OUTPUT_VARIABLE TF_INFORMATION_STRING
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-message(STATUS "Detecting TensorFlow info - done")
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  RESULT_VARIABLE retcode)
+
+if(NOT "${retcode}" STREQUAL "0")
+  message(FATAL_ERROR "Detecting TensorFlow info - failed  \n Did you installed TensorFlow?")
+else()
+  message(STATUS "Detecting TensorFlow info - done")
+endif()
 
 string(REPLACE "\n" ";" TF_INFORMATION_LIST ${TF_INFORMATION_STRING})
 list(GET TF_INFORMATION_LIST 0 TF_VERSION)
@@ -75,22 +81,84 @@ else()
     set (TF_VERSION_COUNT 0)
 endif()
 
-if("${TF_VERSION_MAJOR}.${TF_VERSION_MINOR}" STREQUAL "${TensorFlow_FIND_VERSION_MAJOR}.${TensorFlow_FIND_VERSION_MINOR}")
-  set(TensorFlow_VERSION ${TF_VERSION})
-  set(TensorFlow_ABI ${TF_ABI})
-  set(TensorFlow_INCLUDE_DIR ${TF_INCLUDE_DIR})
-  set(TensorFlow_LIBRARY ${TF_LIBRARY})
-  set(TensorFlow_FOUND TRUE)
-  message(STATUS "Found TensorFlow: (found suitable exact version \"${TensorFlow_VERSION}\")")
-  message(STATUS "TensorFlow-ABI is ${TensorFlow_ABI}")
-  message(STATUS "TensorFlow-INCLUDE_DIR is ${TensorFlow_INCLUDE_DIR}")
-  message(STATUS "TensorFlow-LIBRARY is ${TensorFlow_LIBRARY}")
+# set(TF_VERSION_MINOR 8)
 
-  add_definitions("-DTENSORFLOW_ABI=${TensorFlow_ABI}")
-  add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
-else()
-  set(TENSORFLOW_FOUND FALSE)
+if(TensorFlow_FIND_VERSION_EXACT)
+  # user requested exact match of TensorFlow
+  # TensorFlow release cycles are currently just depending on (major, minor)
+  set(_TensorFlow_TEST_VERSIONS
+      "${TensorFlow_FIND_VERSION_MAJOR}.${TensorFlow_FIND_VERSION_MINOR}.${TensorFlow_FIND_VERSION_PATCH}"
+      "${TensorFlow_FIND_VERSION_MAJOR}.${TensorFlow_FIND_VERSION_MINOR}")
+else(TensorFlow_FIND_VERSION_EXACT)
+  # user requested not an exact TensorFlow version
+  # However, only TensorFlow versions 1.9, 1.10 support all header files
+  # for custom ops
+  set(_TensorFlow_KNOWN_VERSIONS ${TensorFlow_ADDITIONAL_VERSIONS}
+      "1.9" "1.9.0" "1.10" "1.10.0")
+  set(_TensorFlow_TEST_VERSIONS)
+
+  if(TensorFlow_FIND_VERSION)
+      set(_TensorFlow_FIND_VERSION_SHORT "${TensorFlow_FIND_VERSION_MAJOR}.${TensorFlow_FIND_VERSION_MINOR}")
+      # Select acceptable versions.
+      foreach(version ${_TensorFlow_KNOWN_VERSIONS})
+        if(NOT "${version}" VERSION_LESS "${TensorFlow_FIND_VERSION}")
+          # This version is high enough.
+          list(APPEND _TensorFlow_TEST_VERSIONS "${version}")
+        endif()
+      endforeach(version)
+    else(TensorFlow_FIND_VERSION)
+      # Any version is acceptable.
+      set(_TensorFlow_TEST_VERSIONS "${_TensorFlow_KNOWN_VERSIONS}")
+    endif(TensorFlow_FIND_VERSION)
 endif()
+
+# test all given versions
+set(TensorFlow_FOUND FALSE)
+FOREACH(_TensorFlow_VER ${_TensorFlow_TEST_VERSIONS})
+  if("${TF_VERSION_MAJOR}.${TF_VERSION_MINOR}" STREQUAL "${_TensorFlow_VER}")
+    # found appropriate version
+    set(TensorFlow_VERSION ${TF_VERSION})
+    set(TensorFlow_ABI ${TF_ABI})
+    set(TensorFlow_INCLUDE_DIR ${TF_INCLUDE_DIR})
+    set(TensorFlow_LIBRARY ${TF_LIBRARY})
+    set(TensorFlow_FOUND TRUE)
+    message(STATUS "Found TensorFlow: (found appropriate version \"${TensorFlow_VERSION}\")")
+    message(STATUS "TensorFlow-ABI is ${TensorFlow_ABI}")
+    message(STATUS "TensorFlow-INCLUDE_DIR is ${TensorFlow_INCLUDE_DIR}")
+    message(STATUS "TensorFlow-LIBRARY is ${TensorFlow_LIBRARY}")
+
+    add_definitions("-DTENSORFLOW_ABI=${TensorFlow_ABI}")
+    add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
+    break()
+  endif()
+ENDFOREACH(_TensorFlow_VER)
+
+if(NOT TensorFlow_FOUND)
+message(FATAL_ERROR "Your installed TensorFlow version ${TF_VERSION_MAJOR}.${TF_VERSION_MINOR} is not supported\n"
+                    "We tested against ${_TensorFlow_TEST_VERSIONS}")
+endif(NOT TensorFlow_FOUND)
+
+# if("${TF_VERSION_MAJOR}.${TF_VERSION_MINOR}" STREQUAL "${TensorFlow_FIND_VERSION_MAJOR}.${TensorFlow_FIND_VERSION_MINOR}")
+#     set(TensorFlow_VERSION ${TF_VERSION})
+#     set(TensorFlow_ABI ${TF_ABI})
+#     set(TensorFlow_INCLUDE_DIR ${TF_INCLUDE_DIR})
+#     set(TensorFlow_LIBRARY ${TF_LIBRARY})
+#     set(TensorFlow_FOUND TRUE)
+#     message(STATUS "Found TensorFlow: (found suitable exact version \"${TensorFlow_VERSION}\")")
+#     message(STATUS "TensorFlow-ABI is ${TensorFlow_ABI}")
+#     message(STATUS "TensorFlow-INCLUDE_DIR is ${TensorFlow_INCLUDE_DIR}")
+#     message(STATUS "TensorFlow-LIBRARY is ${TensorFlow_LIBRARY}")
+
+#     add_definitions("-DTENSORFLOW_ABI=${TensorFlow_ABI}")
+#     add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
+#   else()
+
+#     # if(${TensorFlow_FIND_VERSION} STREQUAL "")
+#     #   message(STATUS "Empty TensorFLOW version")
+#     # endif()
+
+#     set(TENSORFLOW_FOUND FALSE)
+#   endif()
 
 find_library(TensorFlow_C_LIBRARY
   NAMES libtensorflow_cc.so
@@ -134,7 +202,7 @@ macro(TensorFlow_REQUIRE_SOURCE)
   endif()
 endmacro()
 
-macro(add_tensorflow_operation op_name)
+macro(add_tensorflow_cpu_operation op_name)
   message(STATUS "will build custom TensorFlow operation \"${op_name}\" (CPU only)")
 
   add_library(${op_name}_op SHARED kernels/${op_name}_op.cc kernels/${op_name}_kernel.cc ops/${op_name}.cc )
