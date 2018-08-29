@@ -31,7 +31,7 @@ user@host $ cd ..
 user@host $ python example.py
 ```
 
-## Resize example
+## TensorFlow Graph within C++
 
 This example illustrates the process of loading an image (using OpenCV or TensorFlow), resizing the image  saving the image as a JPG or PNG (using OpenCV or TensorFlow).
 
@@ -41,6 +41,26 @@ user@host $ export TENSORFLOW_BUILD_DIR=...
 user@host $ export TENSORFLOW_SOURCE_DIR=...
 user@host $ cmake .
 user@host $ make
+```
+
+
+## TensorFlow-Serving
+
+A simple TensorFlow serving example.
+
+```console
+server@host $ cd serving/training
+server@host $ python create.py # create some model
+server@host $ cd serving/server/
+server@host $ ./run.sh # start server
+
+# some some queries
+
+client@host $ cd client/bash
+client@host $ ./client.sh
+client@host $ cd client/python
+client@host $ python client_rest.py
+client@host $ python client_grpc.py
 ```
 
 ## Inference
