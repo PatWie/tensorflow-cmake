@@ -53,112 +53,121 @@ if(WIN32)
 endif(WIN32)
 
 
-message(STATUS "Detecting TensorFlow info")
-execute_process(
-  COMMAND python -c "import tensorflow as tf; print(tf.__version__); print(tf.__cxx11_abi_flag__); print(tf.sysconfig.get_include()); print(tf.sysconfig.get_lib() + '/libtensorflow_framework.so')"
-  OUTPUT_VARIABLE TF_INFORMATION_STRING
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-  RESULT_VARIABLE retcode)
+option(PYTHON_EXECUTABLE "specify the python version TensorFlow is installed on." python3)
 
-if(NOT "${retcode}" STREQUAL "0")
-  message(FATAL_ERROR "Detecting TensorFlow info - failed  \n Did you installed TensorFlow?")
+if(TensorFlow_FOUND)
+  # reuse cached variables
+  message(STATUS "Reuse cached information from TensorFlow ${TensorFlow_VERSION} ")
 else()
-  message(STATUS "Detecting TensorFlow info - done")
-endif()
+  message(STATUS "Detecting TensorFlow using ${PYTHON_EXECUTABLE}"
+          " (use -DPYTHON_EXECUTABLE=... otherwise)")
+  execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} -c "import tensorflow as tf; print(tf.__version__); print(tf.__cxx11_abi_flag__); print(tf.sysconfig.get_include()); print(tf.sysconfig.get_lib() + '/libtensorflow_framework.so')"
+    OUTPUT_VARIABLE TF_INFORMATION_STRING
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    RESULT_VARIABLE retcode)
 
-string(REPLACE "\n" ";" TF_INFORMATION_LIST ${TF_INFORMATION_STRING})
-list(GET TF_INFORMATION_LIST 0 TF_DETECTED_VERSION)
-list(GET TF_INFORMATION_LIST 1 TF_DETECTED_ABI)
-list(GET TF_INFORMATION_LIST 2 TF_DETECTED_INCLUDE_DIR)
-list(GET TF_INFORMATION_LIST 3 TF_DETECTED_LIBRARY)
-
-# set(TF_DETECTED_VERSION 1.8)
-
-set(_packageName "TF")
-if (DEFINED TF_DETECTED_VERSION)
-    string (REGEX MATCHALL "[0-9]+" _versionComponents "${TF_DETECTED_VERSION}")
-    list (LENGTH _versionComponents _len)
-    if (${_len} GREATER 0)
-        list(GET _versionComponents 0 TF_DETECTED_VERSION_MAJOR)
-    endif()
-    if (${_len} GREATER 1)
-        list(GET _versionComponents 1 TF_DETECTED_VERSION_MINOR)
-    endif()
-    if (${_len} GREATER 2)
-        list(GET _versionComponents 2 TF_DETECTED_VERSION_PATCH)
-    endif()
-    if (${_len} GREATER 3)
-        list(GET _versionComponents 3 TF_DETECTED_VERSION_TWEAK)
-    endif()
-    set (TF_DETECTED_VERSION_COUNT ${_len})
-else()
-    set (TF_DETECTED_VERSION_COUNT 0)
-endif()
-
-
-# -- prevent pre 1.9 versions
-# Note: TensorFlow 1.7 supported custom ops and all header files.
-# TensorFlow 1.8 broke that promise and 1.9, 1.10 are fine again.
-# This cmake-file is only tested against 1.9+.
-if("${TF_DETECTED_VERSION}" VERSION_LESS "1.9")
-  message(FATAL_ERROR "Your installed TensorFlow version ${TF_DETECTED_VERSION} is too old.")
-endif()
-
-if(TF_FIND_VERSION_EXACT)
-  # User requested exact match of TensorFlow.
-  # TensorFlow release cycles are currently just depending on (major, minor)
-  # But we test against both.
-  set(_TensorFlow_TEST_VERSIONS
-      "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}.${TF_FIND_VERSION_PATCH}"
-      "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}")
-else(TF_FIND_VERSION_EXACT)
-  # User requested not an exact TensorFlow version.
-  # However, only TensorFlow versions 1.9, 1.10 support all header files
-  # for custom ops.
-  set(_TensorFlow_KNOWN_VERSIONS ${TensorFlow_ADDITIONAL_VERSIONS}
-      "1.9" "1.9.0" "1.10" "1.10.0")
-  set(_TensorFlow_TEST_VERSIONS)
-
-  if(TF_FIND_VERSION)
-      set(_TF_FIND_VERSION_SHORT "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}")
-      # Select acceptable versions.
-      foreach(version ${_TensorFlow_KNOWN_VERSIONS})
-        if(NOT "${version}" VERSION_LESS "${TF_FIND_VERSION}")
-          # This version is high enough.
-          list(APPEND _TensorFlow_TEST_VERSIONS "${version}")
-        endif()
-      endforeach(version)
-    else(TF_FIND_VERSION)
-      # Any version is acceptable.
-      set(_TensorFlow_TEST_VERSIONS "${_TensorFlow_KNOWN_VERSIONS}")
-    endif(TF_FIND_VERSION)
-endif()
-
-# test all given versions
-set(TensorFlow_FOUND FALSE)
-FOREACH(_TensorFlow_VER ${_TensorFlow_TEST_VERSIONS})
-  if("${TF_DETECTED_VERSION_MAJOR}.${TF_DETECTED_VERSION_MINOR}" STREQUAL "${_TensorFlow_VER}")
-    # found appropriate version
-    set(TensorFlow_VERSION ${TF_DETECTED_VERSION})
-    set(TensorFlow_ABI ${TF_DETECTED_ABI})
-    set(TensorFlow_INCLUDE_DIR ${TF_DETECTED_INCLUDE_DIR})
-    set(TensorFlow_LIBRARY ${TF_DETECTED_LIBRARY})
-    set(TensorFlow_FOUND TRUE)
-    message(STATUS "Found TensorFlow: (found appropriate version \"${TensorFlow_VERSION}\")")
-    message(STATUS "TensorFlow-ABI is ${TensorFlow_ABI}")
-    message(STATUS "TensorFlow-INCLUDE_DIR is ${TensorFlow_INCLUDE_DIR}")
-    message(STATUS "TensorFlow-LIBRARY is ${TensorFlow_LIBRARY}")
-
-    add_definitions("-DTENSORFLOW_ABI=${TensorFlow_ABI}")
-    add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
-    break()
+  if(NOT "${retcode}" STREQUAL "0")
+    message(FATAL_ERROR "Detecting TensorFlow info - failed  \n Did you installed TensorFlow?")
+  else()
+    message(STATUS "Detecting TensorFlow info - done")
   endif()
-ENDFOREACH(_TensorFlow_VER)
 
-if(NOT TensorFlow_FOUND)
-message(FATAL_ERROR "Your installed TensorFlow version ${TF_DETECTED_VERSION_MAJOR}.${TF_DETECTED_VERSION_MINOR} is not supported\n"
-                    "We tested against ${_TensorFlow_TEST_VERSIONS}")
-endif(NOT TensorFlow_FOUND)
+  string(REPLACE "\n" ";" TF_INFORMATION_LIST ${TF_INFORMATION_STRING})
+  list(GET TF_INFORMATION_LIST 0 TF_DETECTED_VERSION)
+  list(GET TF_INFORMATION_LIST 1 TF_DETECTED_ABI)
+  list(GET TF_INFORMATION_LIST 2 TF_DETECTED_INCLUDE_DIR)
+  list(GET TF_INFORMATION_LIST 3 TF_DETECTED_LIBRARY)
+
+  # set(TF_DETECTED_VERSION 1.8)
+
+  set(_packageName "TF")
+  if (DEFINED TF_DETECTED_VERSION)
+      string (REGEX MATCHALL "[0-9]+" _versionComponents "${TF_DETECTED_VERSION}")
+      list (LENGTH _versionComponents _len)
+      if (${_len} GREATER 0)
+          list(GET _versionComponents 0 TF_DETECTED_VERSION_MAJOR)
+      endif()
+      if (${_len} GREATER 1)
+          list(GET _versionComponents 1 TF_DETECTED_VERSION_MINOR)
+      endif()
+      if (${_len} GREATER 2)
+          list(GET _versionComponents 2 TF_DETECTED_VERSION_PATCH)
+      endif()
+      if (${_len} GREATER 3)
+          list(GET _versionComponents 3 TF_DETECTED_VERSION_TWEAK)
+      endif()
+      set (TF_DETECTED_VERSION_COUNT ${_len})
+  else()
+      set (TF_DETECTED_VERSION_COUNT 0)
+  endif()
+
+
+  # -- prevent pre 1.9 versions
+  # Note: TensorFlow 1.7 supported custom ops and all header files.
+  # TensorFlow 1.8 broke that promise and 1.9, 1.10 are fine again.
+  # This cmake-file is only tested against 1.9+.
+  if("${TF_DETECTED_VERSION}" VERSION_LESS "1.9")
+    message(FATAL_ERROR "Your installed TensorFlow version ${TF_DETECTED_VERSION} is too old.")
+  endif()
+
+  if(TF_FIND_VERSION_EXACT)
+    # User requested exact match of TensorFlow.
+    # TensorFlow release cycles are currently just depending on (major, minor)
+    # But we test against both.
+    set(_TensorFlow_TEST_VERSIONS
+        "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}.${TF_FIND_VERSION_PATCH}"
+        "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}")
+  else(TF_FIND_VERSION_EXACT)
+    # User requested not an exact TensorFlow version.
+    # However, only TensorFlow versions 1.9, 1.10 support all header files
+    # for custom ops.
+    set(_TensorFlow_KNOWN_VERSIONS ${TensorFlow_ADDITIONAL_VERSIONS}
+        "1.9" "1.9.0" "1.10" "1.10.0")
+    set(_TensorFlow_TEST_VERSIONS)
+
+    if(TF_FIND_VERSION)
+        set(_TF_FIND_VERSION_SHORT "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}")
+        # Select acceptable versions.
+        foreach(version ${_TensorFlow_KNOWN_VERSIONS})
+          if(NOT "${version}" VERSION_LESS "${TF_FIND_VERSION}")
+            # This version is high enough.
+            list(APPEND _TensorFlow_TEST_VERSIONS "${version}")
+          endif()
+        endforeach(version)
+      else(TF_FIND_VERSION)
+        # Any version is acceptable.
+        set(_TensorFlow_TEST_VERSIONS "${_TensorFlow_KNOWN_VERSIONS}")
+      endif(TF_FIND_VERSION)
+  endif()
+
+  # test all given versions
+  set(TensorFlow_FOUND FALSE)
+  FOREACH(_TensorFlow_VER ${_TensorFlow_TEST_VERSIONS})
+    if("${TF_DETECTED_VERSION_MAJOR}.${TF_DETECTED_VERSION_MINOR}" STREQUAL "${_TensorFlow_VER}")
+      # found appropriate version
+      set(TensorFlow_VERSION ${TF_DETECTED_VERSION})
+      set(TensorFlow_ABI ${TF_DETECTED_ABI})
+      set(TensorFlow_INCLUDE_DIR ${TF_DETECTED_INCLUDE_DIR})
+      set(TensorFlow_LIBRARY ${TF_DETECTED_LIBRARY})
+      set(TensorFlow_FOUND TRUE)
+      message(STATUS "Found TensorFlow: (found appropriate version \"${TensorFlow_VERSION}\")")
+      message(STATUS "TensorFlow-ABI is ${TensorFlow_ABI}")
+      message(STATUS "TensorFlow-INCLUDE_DIR is ${TensorFlow_INCLUDE_DIR}")
+      message(STATUS "TensorFlow-LIBRARY is ${TensorFlow_LIBRARY}")
+
+      add_definitions("-DTENSORFLOW_ABI=${TensorFlow_ABI}")
+      add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
+      break()
+    endif()
+  ENDFOREACH(_TensorFlow_VER)
+
+  if(NOT TensorFlow_FOUND)
+  message(FATAL_ERROR "Your installed TensorFlow version ${TF_DETECTED_VERSION_MAJOR}.${TF_DETECTED_VERSION_MINOR} is not supported\n"
+                      "We tested against ${_TensorFlow_TEST_VERSIONS}")
+  endif(NOT TensorFlow_FOUND)
+
+endif()
 
 find_library(TensorFlow_C_LIBRARY
   NAMES libtensorflow_cc.so
@@ -258,5 +267,8 @@ mark_as_advanced(TF_INFORMATION_STRING TF_DETECTED_VERSION TF_DETECTED_VERSION_M
                  TF_DETECTED_INCLUDE_DIR TF_DETECTED_LIBRARY
                  TensorFlow_C_LIBRARY TensorFlow_LIBRARY TensorFlow_SOURCE_DIR TensorFlow_INCLUDE_DIR TensorFlow_ABI)
 
-
-
+SET(TensorFlow_INCLUDE_DIR ${TensorFlow_INCLUDE_DIR} CACHE PATH "path to tensorflow header files")
+SET(TensorFlow_VERSION ${TensorFlow_VERSION} CACHE INTERNAL "The Python executable Version")
+SET(TensorFlow_ABI ${TensorFlow_ABI} CACHE STRING "The Python executable Version")
+SET(TensorFlow_LIBRARY ${TensorFlow_LIBRARY} CACHE PATH "The Python executable Version")
+SET(TensorFlow_FOUND ${TensorFlow_FOUND} CACHE BOOL "The Python executable Version")

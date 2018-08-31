@@ -4,7 +4,7 @@ pipeline:
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd custom_op/user_ops
-      - cmake .
+      - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_cc:
     image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
@@ -14,7 +14,7 @@ pipeline:
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd inference/cc/
-      - cmake .
+      - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_c:
     image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
@@ -24,7 +24,7 @@ pipeline:
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd inference/c/
-      - cmake .
+      - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_go:
     image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0-go1.10
@@ -47,7 +47,7 @@ pipeline:
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd examples/keras/
-      - cmake .
+      - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   example_simple:
     image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
@@ -57,7 +57,7 @@ pipeline:
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd examples/simple/
-      - cmake .
+      - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   example_resize:
     image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0-opencv3.4.2
@@ -67,7 +67,7 @@ pipeline:
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd examples/resize/
-      - cmake .
+      - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   event_writer:
     image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
@@ -77,5 +77,5 @@ pipeline:
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd examples/event_writer/
-      - cmake .
+      - cmake . -DPYTHON_EXECUTABLE=python2
       - make
