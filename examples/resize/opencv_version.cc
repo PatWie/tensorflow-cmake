@@ -67,8 +67,10 @@ int main() {
   resized_image.create(output.dim_size(1), output.dim_size(2), CV_32FC3);
   std::copy_n((char*) result_float_data , output.shape().num_elements() * sizeof(float), (char*) resized_image.data);
 
-  cv::imwrite("Grace_Hopper_resized.png", resized_image);
-
+  //cv::imwrite("Grace_Hopper_resized.png", resized_image);
+  cv::Mat resized_image_uint8;
+  resized_image.convertTo(resized_image_uint8, CV_8UC3);
+  cv::imwrite("Grace_Hopper_resized.png", resized_image_uint8);
 
 
   return 0;
