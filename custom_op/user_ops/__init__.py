@@ -5,13 +5,31 @@ import tensorflow as tf
 import os
 from tensorflow.python.framework import ops
 
-__all__ = ['matrix_add']
+__all__ = []
 
-path = os.path.join(os.path.dirname(__file__), 'matrix_add_op.so')
-_matrix_add_module = tf.load_op_library(path)
+def load_op(name, has_grad=False):
+  """Load operation and add it to __all__ for imports.
 
-matrix_add = _matrix_add_module.matrix_add
-_matrix_add_grad = _matrix_add_module.matrix_add_grad
+  Args:
+      name (str): name of operation without "_op" suffix
+      has_grad (bool, optional): gradient (if exists) should be loaded as well
+
+  Returns:
+      functions
+  """
+  global __all__
+  path = os.path.join(os.path.dirname(__file__), '%s_op.so' % name)
+  _module = tf.load_op_library(path)
+  if has_grad:
+    __all__.append('%s' % name)
+    __all__.append('%s_grad' % name)
+    return getattr(_module, '%s' % name), getattr(_module, '%s_grad' % name)
+  else:
+    __all__.append('%s' % name)
+    return getattr(_module, '%s' % name)
+
+
+matrix_add, matrix_add_grad = load_op('matrix_add', has_grad=True)
 
 
 @ops.RegisterGradient("MatrixAdd")
@@ -21,4 +39,4 @@ def _MatrixAddGrad(op, *grads):
   matB = op.inputs[1]
   # top = op.outputs[0]
   topdiff = grads[0]
-  return _matrix_add_grad(matA, matB, topdiff, bias=bias)
+  return matrix_add_grad(matA, matB, topdiff, bias=bias)
