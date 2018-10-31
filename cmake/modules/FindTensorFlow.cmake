@@ -166,6 +166,13 @@ else()
                       "We tested against ${_TensorFlow_TEST_VERSIONS}")
   endif(NOT TensorFlow_FOUND)
 
+  # test 1.11 version
+  if("${TF_DETECTED_VERSION}" VERSION_EQUAL "1.11")
+    message(STATUS "[WARNING] The TensorFlow version ${TF_DETECTED_VERSION} has a bug (see \#22766). We disable asserts using -DNDEBUG=True ")
+    add_definitions("-DNDEBUG=True")
+  endif()
+
+
 endif()
 
 find_library(TensorFlow_C_LIBRARY
@@ -246,8 +253,8 @@ endmacro()
 
 # simplify TensorFlow dependencies
 add_library(TensorFlow_DEP INTERFACE)
-TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP INTERFACE ${TensorFlow_SOURCE_DIR})
-TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP INTERFACE ${TensorFlow_INCLUDE_DIR})
+TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP SYSTEM INTERFACE ${TensorFlow_SOURCE_DIR})
+TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP SYSTEM INTERFACE ${TensorFlow_INCLUDE_DIR})
 TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_C_LIBRARY} -Wl,--no-whole-archive)
 TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_LIBRARY} -Wl,--no-whole-archive)
 
