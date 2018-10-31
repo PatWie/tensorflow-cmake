@@ -54,6 +54,7 @@ endif(WIN32)
 
 set(PYTHON_EXECUTABLE "python3" CACHE STRING "specify the python version TensorFlow is installed on.")
 
+
 if(TensorFlow_FOUND)
   # reuse cached variables
   message(STATUS "Reuse cached information from TensorFlow ${TensorFlow_VERSION} ")
@@ -168,11 +169,15 @@ else()
 
   # test 1.11 version
   if("${TF_DETECTED_VERSION}" VERSION_EQUAL "1.11")
-    message(STATUS "[WARNING] The TensorFlow version ${TF_DETECTED_VERSION} has a bug (see \#22766). We disable asserts using -DNDEBUG=True ")
-    add_definitions("-DNDEBUG=True")
+    set(TF_DISABLE_ASSERTS "TRUE")
   endif()
 
+endif()
 
+
+if(${TF_DISABLE_ASSERTS})
+  message(STATUS "[WARNING] The TensorFlow version ${TF_DETECTED_VERSION} has a bug (see \#22766). We disable asserts using -DNDEBUG=True ")
+  add_definitions("-DNDEBUG=True")
 endif()
 
 find_library(TensorFlow_C_LIBRARY
@@ -270,7 +275,7 @@ find_package_handle_standard_args(
   )
 
 mark_as_advanced(TF_INFORMATION_STRING TF_DETECTED_VERSION TF_DETECTED_VERSION_MAJOR TF_DETECTED_VERSION_MINOR TF_DETECTED_VERSION TF_DETECTED_ABI
-                 TF_DETECTED_INCLUDE_DIR TF_DETECTED_LIBRARY
+                 TF_DETECTED_INCLUDE_DIR TF_DETECTED_LIBRARY TF_DISABLE_ASSERTS
                  TensorFlow_C_LIBRARY TensorFlow_LIBRARY TensorFlow_SOURCE_DIR TensorFlow_INCLUDE_DIR TensorFlow_ABI)
 
 SET(TensorFlow_INCLUDE_DIR ${TensorFlow_INCLUDE_DIR} CACHE PATH "path to tensorflow header files")
@@ -278,3 +283,4 @@ SET(TensorFlow_VERSION ${TensorFlow_VERSION} CACHE INTERNAL "The Python executab
 SET(TensorFlow_ABI ${TensorFlow_ABI} CACHE STRING "The Python executable Version")
 SET(TensorFlow_LIBRARY ${TensorFlow_LIBRARY} CACHE PATH "The Python executable Version")
 SET(TensorFlow_FOUND ${TensorFlow_FOUND} CACHE BOOL "The Python executable Version")
+SET(TF_DISABLE_ASSERTS ${TF_DISABLE_ASSERTS} CACHE BOOL "Workarounds")

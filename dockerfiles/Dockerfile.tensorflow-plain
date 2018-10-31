@@ -3,7 +3,6 @@ ARG TF_VERSION
 ARG BAZEL_VERSION
 ARG CUB_VERSION
 FROM tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-dependencies
-
 LABEL maintainer="Patrick Wieschollek <mail@patwie.com>"
 
 ARG TF_VERSION
@@ -53,6 +52,10 @@ RUN mkdir /tensorflow_dist
 RUN mkdir -p /tensorflow_dist/includes/tensorflow/cc/ops/
 RUN cp /tensorflow/bazel-genfiles/tensorflow/cc/ops/*.h /tensorflow_dist/includes/tensorflow/cc/ops/
 RUN cp /tensorflow/bazel-bin/tensorflow/*.so /tensorflow_dist/
+
+WORKDIR /extra
+RUN wget https://codeload.github.com/NVlabs/cub/zip/${CUB_VERSION}
+RUN unzip ${CUB_VERSION}
 
 WORKDIR /root
 

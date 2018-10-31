@@ -3,14 +3,14 @@ ARG TF_VERSION
 ARG BAZEL_VERSION
 ARG CUB_VERSION
 ARG OPENCV_VERSION
-FROM tensorflow:ubuntu16.04-cuda9.2-bazel${BAZEL_VERSION}-tensorflow${TF_VERSION}
-
+FROM tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TF_VERSION}
 LABEL maintainer="Patrick Wieschollek <mail@patwie.com>"
 
 ARG TF_VERSION
 ARG BAZEL_VERSION
 ARG CUB_VERSION
 ARG OPENCV_VERSION
+
 
 RUN apt-get -y update
 RUN apt-get -y install python2.7 python3.5 python3.5-dev wget unzip \
@@ -27,7 +27,6 @@ RUN dir
 RUN unzip -q opencv3.zip
 RUN dir
 RUN mv opencv-${OPENCV_VERSION} /opencv
-# no need for OpenCV-contrib for now
 # RUN wget https://github.com/opencv/opencv_contrib/archive/${OPENCV_VERSION}.zip -O opencv_contrib3.zip
 # RUN unzip -q opencv_contrib3.zip
 # RUN mv opencv_contrib-${OPENCV_VERSION} /opencv_contrib

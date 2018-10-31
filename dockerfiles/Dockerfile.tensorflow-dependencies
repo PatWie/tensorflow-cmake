@@ -1,30 +1,33 @@
 ARG BAZEL_VERSION
 ARG CUDA_VERSION
+ARG CUDA_POSTFIX
 FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu16.04
 
 ARG BAZEL_VERSION
-
+ARG CUDA_POSTFIX
+ARG CUDNN_VERSION
 RUN echo "BAZEL_VERSION" ${BAZEL_VERSION}
 RUN echo "CUDA_VERSION" ${CUDA_VERSION}
-
+RUN echo "CUDA_POSTFIX" ${CUDA_POSTFIX}
+RUN echo "CUDNN_VERSION" ${CUDNN_VERSION}
 LABEL maintainer="Patrick Wieschollek <mail@patwie.com>"
 
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
-        cuda-command-line-tools-9-0 \
-        cuda-cublas-dev-9-2 \
-        cuda-cudart-dev-9-2 \
-        cuda-cufft-dev-9-2 \
-        cuda-curand-dev-9-2 \
-        cuda-cusolver-dev-9-2 \
-        cuda-cusparse-dev-9-2 \
+        cuda-command-line-tools-${CUDA_POSTFIX} \
+        cuda-cublas-dev-${CUDA_POSTFIX} \
+        cuda-cudart-dev-${CUDA_POSTFIX} \
+        cuda-cufft-dev-${CUDA_POSTFIX} \
+        cuda-curand-dev-${CUDA_POSTFIX} \
+        cuda-cusolver-dev-${CUDA_POSTFIX} \
+        cuda-cusparse-dev-${CUDA_POSTFIX} \
         curl \
         git \
         nano \
         cmake \
-        libcudnn7=7.1.4.18-1+cuda9.0 \
-        libcudnn7-dev=7.1.4.18-1+cuda9.0 \
+        libcudnn7=${CUDNN_VERSION} \
+        libcudnn7-dev=${CUDNN_VERSION} \
         libnccl2 \
         libnccl-dev \
         libcurl3-dev \
@@ -60,18 +63,23 @@ RUN pip --no-cache-dir install \
         scipy \
         sklearn \
         pandas \
+        keras_applications \
+        keras_preprocessing \
         && \
     python -m ipykernel.kernelspec
 
-# https://github.com/bazelbuild/bazel/issues/134
+# Set up Bazel.
+
+# Running bazel inside a `docker build` command causes trouble, cf:
+#   https://github.com/bazelbuild/bazel/issues/134
+# The easiest solution is to set up a bazelrc file forcing --batch.
 RUN echo "startup --batch" >>/etc/bazel.bazelrc
-# https://github.com/bazelbuild/bazel/issues/418
+
+# Similarly, we need to workaround sandboxing issues:
+#   https://github.com/bazelbuild/bazel/issues/418
 RUN echo "build --spawn_strategy=standalone --genrule_strategy=standalone" \
     >>/etc/bazel.bazelrc
 
-WORKDIR /extra
-RUN wget https://codeload.github.com/NVlabs/cub/zip/${CUB_VERSION}
-RUN unzip ${CUB_VERSION}
 
 WORKDIR /
 RUN echo https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-linux-x86_64.sh

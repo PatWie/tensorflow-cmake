@@ -5,9 +5,11 @@ Now, guess what: This is a bazel-free zone. We use CMake here!
 
 This collection contains **reliable** and **dead-simple** examples to use TensorFlow in C, C++, Go and Python: load a pre-trained model or compile a custom operation with or without CUDA. All builds are tested against the two most recent stable TensorFlow version and rely on CMake with a custom [FindTensorFlow.cmake](https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake). This cmake includes common work arounds for bugs in specific TF versions.
 
-| TensorFlow v1.10.0 | TensorFlow v1.11.0 |
-| ------ | ------ |
-| [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+The implementation is tested against the following versions
+
+| TensorFlow  v1.9.0 | TensorFlow  v1.10.0 | TensorFlow  v1.11.0 |
+| ------ | ------ | ------ |
+| [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
 
 It contains the following examples.
 
