@@ -1,13 +1,32 @@
+matrix:
+  TENSORFLOW_VERSION:
+    - 1.11
+    - 1.10
+    - 1.9
+
+matrix:
+  include:
+    - TENSORFLOW_VERSION: 1.11.0
+      CUDA_VERSION: 10.0
+      BAZEL_VERSION: 0.16.1
+      GO_VERSION: 1.11
+      OPENCV_VERSION: 3.4.2
+    - TENSORFLOW_VERSION: 1.10.0
+      CUDA_VERSION: 9.2
+      BAZEL_VERSION: 0.16.1
+      GO_VERSION: 1.10
+      OPENCV_VERSION: 3.4.2
+
 pipeline:
   custom_op:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd custom_op/user_ops
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_cc:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -17,7 +36,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_c:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -27,7 +46,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_go:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0-go1.10
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}-go${GO_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -36,11 +55,25 @@ pipeline:
       - export LD_LIBRARY_PATH=/tensorflow_dist:$${LD_LIBRARY_PATH}
       - export LD_LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LD_LIBRARY_PATH}
       - export LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LIBRARY_PATH}
-      - go get github.com/tensorflow/tensorflow/tensorflow/go
+      # - go get github.com/tensorflow/tensorflow/tensorflow/go
+      # - pushd
+      - WDIR=$PWD
+      - mkdir -p $GOPATH/src/github.com/tensorflow
+      - cd $GOPATH/src/github.com/tensorflow
+      # - git clone git@github.com:tensorflow/tensorflow.git
+      # - git clone git@github.com:tensorflow/tensorflow.git
+      # - git clone https://github.com/tensorflow/tensorflow.git
+      - git clone -b v${TENSORFLOW_VERSION} --single-branch --depth 1 https://github.com/tensorflow/tensorflow.git
+      # - cd tensorflow
+      # - git checkout v${TENSORFLOW_VERSION}
+      # - cd $GOPATH/src/github.com/tensorflow/tensorflow/tensorflow/go
+      # - git checkout v${TENSORFLOW_VERSION}
+      # - popd
+      - cd $WDIR
       - cd inference/go/
       - ./build.sh
   example_keras:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -50,7 +83,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   example_simple:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -60,7 +93,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   example_resize:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0-opencv3.4.2
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}-opencv${OPENCV_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -70,7 +103,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   event_writer:
-    image: tensorflow:ubuntu16.04-cuda9.2-bazel0.16.1-tensorflow1.10.0
+    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist

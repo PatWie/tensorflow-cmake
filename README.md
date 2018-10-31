@@ -3,18 +3,25 @@
 Looking at the official docs: What do you see? The usual fare?
 Now, guess what: This is a bazel-free zone. We use CMake here!
 
-This collection contains **reliable** and **dead-simple** examples to use TensorFlow in C, C++, Go and Python: load a pre-trained model or compile a custom operation with or without CUDA. All builds are tested against the most recent stable TensorFlow version (v1.10.0) and rely on CMake with a custom [FindTensorFlow.cmake](https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake).
+This collection contains **reliable** and **dead-simple** examples to use TensorFlow in C, C++, Go and Python: load a pre-trained model or compile a custom operation with or without CUDA. All builds are tested against the two most recent stable TensorFlow version and rely on CMake with a custom [FindTensorFlow.cmake](https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake). This cmake includes common work arounds for bugs in specific TF versions.
 
-| example| CI-tested | explanation
-| ------ | ------ | ------ |
-| [custom operation](./custom_op)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake)  | build a custom operation for TensorFLow in C++/CUDA (requires only pip)
-| [inference  (C++)](./inference/cc) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in C++
-| [inference  (C)](./inference/c) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in C
-| [inference  (Go)](./inference/go) |  [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run inference in Go
-| [event writer](./examples/event_writer)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | write event files for TensorBoard in C++
-| [keras cpp-inference example](./examples/keras)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | run a Keras-model in C++
-| [simple example](./examples/simple)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | create and run a TensorFlow graph in C++
-| [resize image example](./examples/resize)  | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | resize an image in TensorFlow with/without OpenCV
+| TF Version | Result |
+| ------ | ------ |
+| 1.10.0 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+| 1.11.0 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+
+It contains the following examples.
+
+| Example| Explanation |
+| ------ | ------ |
+| [custom operation](./custom_op)   | build a custom operation for TensorFLow in C++/CUDA (requires only pip) |
+| [inference  (C++)](./inference/cc) | run inference in C++ |
+| [inference  (C)](./inference/c) | run inference in C |
+| [inference  (Go)](./inference/go) | run inference in Go |
+| [event writer](./examples/event_writer)  | write event files for TensorBoard in C++ |
+| [keras cpp-inference example](./examples/keras)  | run a Keras-model in C++ |
+| [simple example](./examples/simple)  | create and run a TensorFlow graph in C++ |
+| [resize image example](./examples/resize)  | resize an image in TensorFlow with/without OpenCV |
 
 
 ## Custom Operation
