@@ -123,7 +123,7 @@ else()
     # However, only TensorFlow versions 1.9, 1.10 support all header files
     # for custom ops.
     set(_TensorFlow_KNOWN_VERSIONS ${TensorFlow_ADDITIONAL_VERSIONS}
-        "1.9" "1.9.0" "1.10" "1.10.0" "1.11" "1.11.0")
+        "1.9" "1.9.0" "1.10" "1.10.0" "1.11" "1.11.0" "1.12" "1.12.0")
     set(_TensorFlow_TEST_VERSIONS)
 
     if(TF_FIND_VERSION)
@@ -169,6 +169,14 @@ else()
 
   # test 1.11 version
   if("${TF_DETECTED_VERSION}" VERSION_EQUAL "1.11")
+    set(TF_DISABLE_ASSERTS "TRUE")
+  endif()
+
+  if("${TF_DETECTED_VERSION}" VERSION_EQUAL "1.12")
+    set(TF_DISABLE_ASSERTS "TRUE")
+  endif()
+
+  if("${TF_DETECTED_VERSION}" VERSION_EQUAL "1.12.0")
     set(TF_DISABLE_ASSERTS "TRUE")
   endif()
 

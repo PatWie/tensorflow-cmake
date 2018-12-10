@@ -7,9 +7,9 @@ This collection contains **reliable** and **dead-simple** examples to use Tensor
 
 The implementation is tested against the following versions
 
-| TensorFlow  v1.9.0 | TensorFlow  v1.10.0 | TensorFlow  v1.11.0 |
-| ------ | ------ | ------ |
-| [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+| TensorFlow  v1.9.0 | TensorFlow  v1.10.0 | TensorFlow  v1.11.0 | TensorFlow  v1.12.0 |
+| ------ | ------ | ------ | ------ |
+| [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
 
 It contains the following examples.
 
