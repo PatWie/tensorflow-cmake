@@ -1,10 +1,10 @@
 #include <tensorflow/core/util/events_writer.h>
-#include <string>
 #include <iostream>
+#include <string>
 
-
-void write_scalar(tensorflow::EventsWriter* writer, double wall_time, tensorflow::int64 step,
-                  const std::string& tag, float simple_value) {
+void write_scalar(tensorflow::EventsWriter* writer, double wall_time,
+                  tensorflow::int64 step, const std::string& tag,
+                  float simple_value) {
   tensorflow::Event event;
   event.set_wall_time(wall_time);
   event.set_step(step);
@@ -14,9 +14,7 @@ void write_scalar(tensorflow::EventsWriter* writer, double wall_time, tensorflow
   writer->WriteEvent(event);
 }
 
-
-int main(int argc, char const *argv[]) {
-
+int main(int argc, char const* argv[]) {
   std::string envent_file = "./events";
   tensorflow::EventsWriter writer(envent_file);
   for (int i = 0; i < 150; ++i)
