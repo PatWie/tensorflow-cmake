@@ -3,7 +3,7 @@ cmake_minimum_required( VERSION 2.8 )
 project( TFCustomOp )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../../cmake/modules)
-find_package(TensorFlow 1.10 EXACT REQUIRED)
+find_package(TensorFlow REQUIRED)
 
 TensorFlow_REQUIRE_C_LIBRARY()
 TensorFlow_REQUIRE_SOURCE()
