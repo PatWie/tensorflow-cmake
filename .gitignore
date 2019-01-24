@@ -163,5 +163,5 @@ examples/resize/opencv_version
 examples/resize/tensorflow_version
 examples/simple/example
 
-serving/basic_image/client/*.png
+serving/image/client/*.png
 

@@ -54,10 +54,11 @@ user@host $ make
 
 ## TensorFlow-Serving
 
-A simple TensorFlow serving example.
+There are two examples demonstrating the handling of TensorFlow-Serving: using a vector input and using an encoded image input.
 
 ```console
-server@host $ cd serving/training
+server@host $ CHOOSE=basic # or image
+server@host $ cd serving/${CHOOSE}/training
 server@host $ python create.py # create some model
 server@host $ cd serving/server/
 server@host $ ./run.sh # start server
@@ -67,8 +68,12 @@ server@host $ ./run.sh # start server
 client@host $ cd client/bash
 client@host $ ./client.sh
 client@host $ cd client/python
+# for the basic-example
 client@host $ python client_rest.py
 client@host $ python client_grpc.py
+# for the image-example
+client@host $ python client_rest.py /path/to/img.[png,jpg]
+client@host $ python client_grpc.py /path/to/img.[png,jpg]
 ```
 
 ## Inference
