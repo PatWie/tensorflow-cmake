@@ -1,3 +1,4 @@
+---
 kind: pipeline
 name: TF-v12
 
@@ -433,3 +434,8 @@ steps:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
     TENSORFLOW_SOURCE_DIR: /tensorflow
 
+---
+kind: signature
+hmac: 60cfc2f44f83f230435bdac41d6a821ec9917def03669220f91362b220090e87
+
+...
