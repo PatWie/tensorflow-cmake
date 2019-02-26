@@ -20,17 +20,17 @@ matrix:
       BAZEL_VERSION: 0.11.0
       GO_VERSION: 1.10
       OPENCV_VERSION: 3.4.2
-      
+
 pipeline:
   custom_op:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     commands:
       - export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}
       - cd custom_op/user_ops
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_cc:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -40,7 +40,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_c:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -50,7 +50,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   inference_go:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}-go${GO_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}-go${GO_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -77,7 +77,7 @@ pipeline:
       - cd inference/go/
       - ./build.sh
   example_keras:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -87,7 +87,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   example_simple:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -97,7 +97,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   example_resize:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}-opencv${OPENCV_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}-opencv${OPENCV_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
@@ -107,7 +107,7 @@ pipeline:
       - cmake . -DPYTHON_EXECUTABLE=python2
       - make
   event_writer:
-    image: tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
+    image: patwie/tensorflow:ubuntu16.04-cuda${CUDA_VERSION}-bazel${BAZEL_VERSION}-tensorflow${TENSORFLOW_VERSION}
     environment:
       - TENSORFLOW_SOURCE_DIR=/tensorflow
       - TENSORFLOW_BUILD_DIR=/tensorflow_dist
