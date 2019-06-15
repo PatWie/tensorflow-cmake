@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: TF-v12
+name: TensorFlow 1.12.0
 
 platform:
   os: linux
@@ -109,7 +109,7 @@ steps:
 
 ---
 kind: pipeline
-name: TF-v11
+name: TensorFlow 1.11.0
 
 platform:
   os: linux
@@ -218,7 +218,7 @@ steps:
 
 ---
 kind: pipeline
-name: TF-v10
+name: TensorFlow 1.10.0
 
 platform:
   os: linux
@@ -327,7 +327,7 @@ steps:
 
 ---
 kind: pipeline
-name: TF-v9
+name: TensorFlow 1.9.0
 
 platform:
   os: linux
@@ -436,6 +436,6 @@ steps:
 
 ---
 kind: signature
-hmac: 60cfc2f44f83f230435bdac41d6a821ec9917def03669220f91362b220090e87
+hmac: ec5f915cb3b7a78e5589858f8c040f7ea20b25864f9dcf8f189d4b2bc6caa642
 
 ...

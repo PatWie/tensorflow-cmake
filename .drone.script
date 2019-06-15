@@ -1,0 +1,177 @@
+def main():
+  return [
+      build_pipeline("1.12.0", "16.04", "10.0", "0.16.1", "1.11"),
+      build_pipeline("1.11.0", "16.04", "10.0", "0.16.1", "1.11"),
+      build_pipeline("1.10.0", "16.04", "9.2", "0.16.1", "1.10"),
+      build_pipeline("1.9.0", "16.04", "9.0", "0.11.0", "1.10"),
+  ]
+
+
+def custom_op_step(image):
+  return {
+      'name': 'custom_op',
+      'pull': 'never',
+      'image': image,
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'cd custom_op/user_ops',
+          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'make'
+      ],
+  }
+
+
+def inference_cc_step(image):
+  return {
+      'name': 'inference_cc',
+      'pull': 'never',
+      'image': image,
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'cd inference/cc/',
+          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'make'
+      ],
+      'environment': {
+          'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
+          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+      }
+  }
+
+
+def inference_c_step(image):
+  return {
+      'name': 'inference_c',
+      'pull': 'never',
+      'image': image,
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'cd inference/c/',
+          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'make'
+      ],
+      'environment': {
+          'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
+          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+      }
+  }
+
+
+def inference_go_step(image, go_version, tf_version):
+  return {
+      'name': 'inference_go',
+      'pull': 'never',
+      'image': '%s-go%s' % (image, go_version),
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'export LD_LIBRARY_PATH=/tensorflow_dist:$${LD_LIBRARY_PATH}',
+          'export LD_LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LD_LIBRARY_PATH}',
+          'export LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LIBRARY_PATH}',
+          'WDIR=$PWD',
+          'mkdir -p $GOPATH/src/github.com/tensorflow',
+          'cd $GOPATH/src/github.com/tensorflow',
+          'git clone -b v%s --single-branch --depth 1 https://github.com/tensorflow/tensorflow.git' % tf_version,
+          'cd $WDIR',
+          'cd inference/go/',
+          './build.sh',
+      ],
+      'environment': {
+          'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
+          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+      }
+  }
+
+
+def example_keras(image):
+  return {
+      'name': 'example_keras',
+      'pull': 'never',
+      'image': image,
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'cd examples/keras/',
+          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'make',
+      ],
+      'environment': {
+          'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
+          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+      }
+  }
+
+
+def example_simple(image):
+  return {
+      'name': 'example_simple',
+      'pull': 'never',
+      'image': image,
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'cd examples/simple/',
+          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'make',
+      ],
+      'environment': {
+          'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
+          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+      }
+  }
+
+
+def example_resize(image):
+  return {
+      'name': 'example_resize',
+      'pull': 'never',
+      'image': '%s-opencv3.4.2' % image,
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'cd examples/resize/',
+          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'make',
+      ],
+      'environment': {
+          'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
+          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+      }
+  }
+
+
+def event_writer(image):
+  return {
+      'name': 'event_writer',
+      'pull': 'never',
+      'image': image,
+      'commands': [
+          'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
+          'cd examples/event_writer/',
+          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'make',
+      ],
+      'environment': {
+          'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
+          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+      }
+  }
+
+
+def build_pipeline(tf_version, ubuntu_version, cuda_version, bazel_version, go_version):
+  img = 'tensorflow:ubuntu%s-cuda%s-bazel%s-tensorflow%s' % (
+      ubuntu_version, cuda_version, bazel_version, tf_version)
+  return {
+      'kind': 'pipeline',
+      'name': 'TensorFlow %s' % tf_version,
+      'platform': {
+          'os': "linux",
+          'arch': 'amd64',
+      },
+      'steps': [
+          custom_op_step(img),
+          inference_cc_step(img),
+          inference_c_step(img),
+          inference_go_step(img, go_version, tf_version),
+          example_keras(img),
+          example_simple(img),
+          example_resize(img),
+          event_writer(img),
+      ]
+  }
