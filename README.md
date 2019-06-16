@@ -11,7 +11,7 @@ The implementation is tested against the following versions
 | ------ | ------ | ------ | ------ |
 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.9.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.10.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.11.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.12.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
 
-It contains the following examples.
+The repository contains the following examples.
 
 | Example| Explanation |
 | ------ | ------ |
