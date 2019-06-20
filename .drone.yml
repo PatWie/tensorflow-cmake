@@ -1,5 +1,114 @@
 ---
 kind: pipeline
+name: TensorFlow 1.13.1
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: custom_op
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - cd custom_op/user_ops
+  - cmake . -DPYTHON_EXECUTABLE=python2
+  - make
+
+- name: inference_cc
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - cd inference/cc/
+  - cmake . -DPYTHON_EXECUTABLE=python2
+  - make
+  environment:
+    TENSORFLOW_BUILD_DIR: /tensorflow_dist
+    TENSORFLOW_SOURCE_DIR: /tensorflow_src
+
+- name: inference_c
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - cd inference/c/
+  - cmake . -DPYTHON_EXECUTABLE=python2
+  - make
+  environment:
+    TENSORFLOW_BUILD_DIR: /tensorflow_dist
+    TENSORFLOW_SOURCE_DIR: /tensorflow_src
+
+- name: inference_go
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - "export LD_LIBRARY_PATH=/tensorflow_dist:$${LD_LIBRARY_PATH}"
+  - "export LD_LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LD_LIBRARY_PATH}"
+  - "export LIBRARY_PATH=$${TENSORFLOW_BUILD_DIR}/:$${LIBRARY_PATH}"
+  - WDIR=$PWD
+  - mkdir -p $GOPATH/src/github.com/tensorflow
+  - cd $GOPATH/src/github.com/tensorflow
+  - git clone -b v1.13.1 --single-branch --depth 1 https://github.com/tensorflow/tensorflow.git
+  - cd $WDIR
+  - cd inference/go/
+  - ./build.sh
+  environment:
+    TENSORFLOW_BUILD_DIR: /tensorflow_dist
+    TENSORFLOW_SOURCE_DIR: /tensorflow_src
+
+- name: example_keras
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - cd examples/keras/
+  - cmake . -DPYTHON_EXECUTABLE=python2
+  - make
+  environment:
+    TENSORFLOW_BUILD_DIR: /tensorflow_dist
+    TENSORFLOW_SOURCE_DIR: /tensorflow_src
+
+- name: example_simple
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - cd examples/simple/
+  - cmake . -DPYTHON_EXECUTABLE=python2
+  - make
+  environment:
+    TENSORFLOW_BUILD_DIR: /tensorflow_dist
+    TENSORFLOW_SOURCE_DIR: /tensorflow_src
+
+- name: example_resize
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - cd examples/resize/
+  - cmake . -DPYTHON_EXECUTABLE=python2
+  - make
+  environment:
+    TENSORFLOW_BUILD_DIR: /tensorflow_dist
+    TENSORFLOW_SOURCE_DIR: /tensorflow_src
+
+- name: event_writer
+  pull: never
+  image: tensorflow-cmake:1.13.1-devel
+  commands:
+  - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
+  - cd examples/event_writer/
+  - cmake . -DPYTHON_EXECUTABLE=python2
+  - make
+  environment:
+    TENSORFLOW_BUILD_DIR: /tensorflow_dist
+    TENSORFLOW_SOURCE_DIR: /tensorflow_src
+
+---
+kind: pipeline
 name: TensorFlow 1.12.0
 
 platform:
@@ -436,6 +545,6 @@ steps:
 
 ---
 kind: signature
-hmac: ec5f915cb3b7a78e5589858f8c040f7ea20b25864f9dcf8f189d4b2bc6caa642
+hmac: b15900693226398445e907aa7854bfee88fbcb3a6feb8862bcd76fd2e40185e0
 
 ...

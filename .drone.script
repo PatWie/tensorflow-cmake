@@ -1,5 +1,8 @@
 def main():
   return [
+      # tf_version, ubuntu_version, cuda_version, bazel_version, go_version
+      build_pipeline_new("1.13.1", "16.04", "10.0", "0.19.2", "1.10"),
+      # old docker images are spearated
       build_pipeline("1.12.0", "16.04", "10.0", "0.16.1", "1.11"),
       build_pipeline("1.11.0", "16.04", "10.0", "0.16.1", "1.11"),
       build_pipeline("1.10.0", "16.04", "9.2", "0.16.1", "1.10"),
@@ -7,7 +10,7 @@ def main():
   ]
 
 
-def custom_op_step(image):
+def custom_op_step(image, src_dir):
   return {
       'name': 'custom_op',
       'pull': 'never',
@@ -21,7 +24,7 @@ def custom_op_step(image):
   }
 
 
-def inference_cc_step(image):
+def inference_cc_step(image, src_dir):
   return {
       'name': 'inference_cc',
       'pull': 'never',
@@ -34,12 +37,12 @@ def inference_cc_step(image):
       ],
       'environment': {
           'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
-          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+          'TENSORFLOW_SOURCE_DIR': src_dir
       }
   }
 
 
-def inference_c_step(image):
+def inference_c_step(image, src_dir):
   return {
       'name': 'inference_c',
       'pull': 'never',
@@ -52,16 +55,16 @@ def inference_c_step(image):
       ],
       'environment': {
           'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
-          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+          'TENSORFLOW_SOURCE_DIR': src_dir
       }
   }
 
 
-def inference_go_step(image, go_version, tf_version):
+def inference_go_step(image, tf_version, src_dir):
   return {
       'name': 'inference_go',
       'pull': 'never',
-      'image': '%s-go%s' % (image, go_version),
+      'image': image,
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'export LD_LIBRARY_PATH=/tensorflow_dist:$${LD_LIBRARY_PATH}',
@@ -77,12 +80,12 @@ def inference_go_step(image, go_version, tf_version):
       ],
       'environment': {
           'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
-          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+          'TENSORFLOW_SOURCE_DIR': src_dir
       }
   }
 
 
-def example_keras(image):
+def example_keras(image, src_dir):
   return {
       'name': 'example_keras',
       'pull': 'never',
@@ -95,12 +98,12 @@ def example_keras(image):
       ],
       'environment': {
           'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
-          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+          'TENSORFLOW_SOURCE_DIR': src_dir
       }
   }
 
 
-def example_simple(image):
+def example_simple(image, src_dir):
   return {
       'name': 'example_simple',
       'pull': 'never',
@@ -113,16 +116,16 @@ def example_simple(image):
       ],
       'environment': {
           'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
-          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+          'TENSORFLOW_SOURCE_DIR': src_dir
       }
   }
 
 
-def example_resize(image):
+def example_resize(image, src_dir):
   return {
       'name': 'example_resize',
       'pull': 'never',
-      'image': '%s-opencv3.4.2' % image,
+      'image': image,
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd examples/resize/',
@@ -131,12 +134,12 @@ def example_resize(image):
       ],
       'environment': {
           'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
-          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+          'TENSORFLOW_SOURCE_DIR': src_dir
       }
   }
 
 
-def event_writer(image):
+def event_writer(image, src_dir):
   return {
       'name': 'event_writer',
       'pull': 'never',
@@ -149,7 +152,7 @@ def event_writer(image):
       ],
       'environment': {
           'TENSORFLOW_BUILD_DIR': '/tensorflow_dist',
-          'TENSORFLOW_SOURCE_DIR': '/tensorflow'
+          'TENSORFLOW_SOURCE_DIR': src_dir
       }
   }
 
@@ -157,6 +160,8 @@ def event_writer(image):
 def build_pipeline(tf_version, ubuntu_version, cuda_version, bazel_version, go_version):
   img = 'tensorflow:ubuntu%s-cuda%s-bazel%s-tensorflow%s' % (
       ubuntu_version, cuda_version, bazel_version, tf_version)
+  img_opencv = '%s-opencv3.4.2' % img
+  img_go = '%s-go%s' % (img, go_version)
   return {
       'kind': 'pipeline',
       'name': 'TensorFlow %s' % tf_version,
@@ -165,13 +170,35 @@ def build_pipeline(tf_version, ubuntu_version, cuda_version, bazel_version, go_v
           'arch': 'amd64',
       },
       'steps': [
-          custom_op_step(img),
-          inference_cc_step(img),
-          inference_c_step(img),
-          inference_go_step(img, go_version, tf_version),
-          example_keras(img),
-          example_simple(img),
-          example_resize(img),
-          event_writer(img),
+          custom_op_step(img, '/tensorflow'),
+          inference_cc_step(img, '/tensorflow'),
+          inference_c_step(img, '/tensorflow'),
+          inference_go_step(img_go, tf_version, '/tensorflow'),
+          example_keras(img, '/tensorflow'),
+          example_simple(img, '/tensorflow'),
+          example_resize(img_opencv, '/tensorflow'),
+          event_writer(img, '/tensorflow'),
+      ]
+  }
+
+
+def build_pipeline_new(tf_version, ubuntu_version, cuda_version, bazel_version, go_version):
+  img = 'tensorflow-cmake:%s-devel' % (tf_version)
+  return {
+      'kind': 'pipeline',
+      'name': 'TensorFlow %s' % tf_version,
+      'platform': {
+          'os': "linux",
+          'arch': 'amd64',
+      },
+      'steps': [
+          custom_op_step(img, '/tensorflow_src'),
+          inference_cc_step(img, '/tensorflow_src'),
+          inference_c_step(img, '/tensorflow_src'),
+          inference_go_step(img, tf_version, '/tensorflow_src'),
+          example_keras(img, '/tensorflow_src'),
+          example_simple(img, '/tensorflow_src'),
+          example_resize(img, '/tensorflow_src'),
+          event_writer(img, '/tensorflow_src'),
       ]
   }
