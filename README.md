@@ -3,13 +3,18 @@
 Looking at the official docs: What do you see? The usual fare?
 Now, guess what: This is a bazel-free zone. We use CMake here!
 
-This collection contains **reliable** and **dead-simple** examples to use TensorFlow in C, C++, Go and Python: load a pre-trained model or compile a custom operation with or without CUDA. All builds are tested against the two most recent stable TensorFlow version and rely on CMake with a custom [FindTensorFlow.cmake](https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake). This cmake includes common work arounds for bugs in specific TF versions.
+This collection contains **reliable** and **dead-simple** examples to use TensorFlow in C, C++, Go and Python: load a pre-trained model or compile a custom operation with or without CUDA. All builds are tested against the most recent stable TensorFlow version and rely on CMake with a custom [FindTensorFlow.cmake](https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake). This cmake file includes common work arounds for bugs in specific TF versions.
 
-The implementation is tested against the following versions
+| TensorFlow | Status |
+| ------ | ------ |
+|   1.14.0 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.14.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+|   1.13.1 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.13.1/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+|   1.12.0 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.12.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+|   1.11.0 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.11.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+|   1.10.0 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.10.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+|   1.9.0 | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.9.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
 
-| TensorFlow  v1.9.0 | TensorFlow  v1.10.0 | TensorFlow  v1.11.0 | TensorFlow  v1.12.0 | TensorFlow  v1.13.1 |
-| ------ | ------ | ------ | ------ | ------ |
-| [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.9.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.10.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.11.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.12.0/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) | [![Build Status TensorFlow](https://ci.patwie.com/api/badges/PatWie/tensorflow-cmake/TensorFlow%201.13.1/status.svg)](http://ci.patwie.com/PatWie/tensorflow-cmake) |
+
 
 The repository contains the following examples.
 
