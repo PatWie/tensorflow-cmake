@@ -1,6 +1,7 @@
 def main():
   return [
       # tf_version, ubuntu_version, cuda_version, bazel_version, go_version
+      build_pipeline_new("1.14.0", "16.04", "10.0", "0.24.1", "1.11"),
       build_pipeline_new("1.13.1", "16.04", "10.0", "0.19.2", "1.10"),
       # old docker images are spearated
       build_pipeline("1.12.0", "16.04", "10.0", "0.16.1", "1.11"),
