@@ -18,10 +18,10 @@ namespace {
 
 #if (TF_MAJOR_VERSION >= 1) && (TF_MINOR_VERSION >= 14)
 using LaunchConfig = ::tensorflow::GpuLaunchConfig;
-constexpr auto GetLaunchConfig = ::tensorflow::GetGpuLaunchConfig;
+#define GetLaunchConfig ::tensorflow::GetGpuLaunchConfig
 #else  // TF >= 1.14.0
 using LaunchConfig = ::tensorflow::CudaLaunchConfig;
-constexpr auto GetLaunchConfig = ::tensorflow::GetCudaLaunchConfig;
+#define GetLaunchConfig ::tensorflow::GetCudaLaunchConfig
 #define GpuGridRangeX CudaGridRangeX
 #endif  // TF >= 1.14.0
 
@@ -118,4 +118,5 @@ template struct MatrixAddGrad<GPUDevice, double>;
 }  // namespace functor
 }  // namespace tensorflow
 
+#undef GetLaunchConfig
 #endif  // GOOGLE_CUDA

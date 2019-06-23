@@ -158,6 +158,8 @@ else()
 
       add_definitions("-DTENSORFLOW_ABI=${TensorFlow_ABI}")
       add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
+      add_definitions("-DTF_MAJOR_VERSION=${TF_FIND_VERSION_MAJOR}")
+      add_definitions("-DTF_MINOR_VERSION=${TF_FIND_VERSION_MINOR}")
       break()
     endif()
   ENDFOREACH(_TensorFlow_VER)
