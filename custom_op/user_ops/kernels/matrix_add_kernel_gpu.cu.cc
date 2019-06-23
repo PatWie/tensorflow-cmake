@@ -5,31 +5,44 @@
 #define EIGEN_USE_GPU
 
 #include "matrix_add_op.h"
+
+#if (TF_MAJOR_VERSION >= 1) && (TF_MINOR_VERSION >= 14)
+#include "tensorflow/core/util/gpu_kernel_helper.h"
+#include "tensorflow/core/util/gpu_launch_config.h"
+#else  // TF >= 1.14.0
 #include "tensorflow/core/util/cuda_kernel_helper.h"
+#endif  // TF >= 1.14.0
 
 namespace tensorflow {
 namespace {
 
-using CudaLaunchConfig = ::tensorflow::CudaLaunchConfig;
+#if (TF_MAJOR_VERSION >= 1) && (TF_MINOR_VERSION >= 14)
+using LaunchConfig = ::tensorflow::GpuLaunchConfig;
+constexpr auto GetLaunchConfig = ::tensorflow::GetGpuLaunchConfig;
+#else  // TF >= 1.14.0
+using LaunchConfig = ::tensorflow::CudaLaunchConfig;
+constexpr auto GetLaunchConfig = ::tensorflow::GetCudaLaunchConfig;
+#define GpuGridRangeX CudaGridRangeX
+#endif  // TF >= 1.14.0
 
 template <typename T>
-__global__ void forward(CudaLaunchConfig cfg, T* __restrict__ Z, const int N,
+__global__ void forward(LaunchConfig cfg, T* __restrict__ Z, const int N,
                         const T* __restrict__ X, const T* __restrict__ Y,
                         const T bias) {
   // for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < N; i += blockDim.x
   // * gridDim.x) {
-  for (int i : CudaGridRangeX(cfg.virtual_thread_count)) {
+  for (int i : GpuGridRangeX(cfg.virtual_thread_count)) {
     Z[i] = X[i] + Y[i] + (T)bias;
   }
 }
 
 template <typename T>
-__global__ void backward(CudaLaunchConfig cfg, const T* __restrict__ top_diff,
+__global__ void backward(LaunchConfig cfg, const T* __restrict__ top_diff,
                          const int N, T* __restrict__ grad_matrixA,
                          T* __restrict__ grad_matrixB) {
   // for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < N; i += blockDim.x
   // * gridDim.x) {
-  for (int i : CudaGridRangeX(cfg.virtual_thread_count)) {
+  for (int i : GpuGridRangeX(cfg.virtual_thread_count)) {
     grad_matrixA[i] = top_diff[i];
     grad_matrixB[i] = top_diff[i];
   }
@@ -46,8 +59,7 @@ struct MatrixAddFunctor<GPUDevice, Dtype> {
     const int N = mA_.NumElements();
     const GPUDevice& d = context->eigen_gpu_device();
 
-    ::tensorflow::CudaLaunchConfig cfg =
-        ::tensorflow::GetCudaLaunchConfig(N, d);
+    LaunchConfig cfg = GetLaunchConfig(N, d);
 
     forward<Dtype><<<cfg.block_count, cfg.thread_per_block, 0, d.stream()>>>(
         cfg, mC_->flat<Dtype>().data(), mA_.NumElements(),
@@ -72,8 +84,7 @@ struct MatrixAddGrad<GPUDevice, Dtype> {
     const int N = topdiff_.NumElements();
     const GPUDevice& d = context->eigen_gpu_device();
 
-    ::tensorflow::CudaLaunchConfig cfg =
-        ::tensorflow::GetCudaLaunchConfig(N, d);
+    LaunchConfig cfg = GetLaunchConfig(N, d);
 
     // // optional reset gradients before running a kernel
     // cudaMemset(grad_mA_->flat<Dtype>().data(), 0, N * sizeof(Dtype));
