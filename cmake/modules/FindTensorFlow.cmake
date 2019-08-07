@@ -190,6 +190,10 @@ else()
     set(TF_DISABLE_ASSERTS "TRUE")
   endif()
 
+  if("${TF_DETECTED_VERSION}" VERSION_EQUAL "1.14")
+    set(TF_DISABLE_ASSERTS "TRUE")
+  endif()
+
 endif()
 
 
