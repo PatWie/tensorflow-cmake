@@ -62,7 +62,7 @@ else()
   message(STATUS "Detecting TensorFlow using ${PYTHON_EXECUTABLE}"
           " (use -DPYTHON_EXECUTABLE=... otherwise)")
   execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c "import tensorflow as tf; print(tf.__version__); print(tf.__cxx11_abi_flag__); print(tf.sysconfig.get_include()); print(tf.sysconfig.get_lib() + '/libtensorflow_framework.so')"
+    COMMAND ${PYTHON_EXECUTABLE} -c "import tensorflow as tf; print(tf.__version__); print(tf.__cxx11_abi_flag__); print(tf.sysconfig.get_include()); print(tf.sysconfig.get_lib());"
     OUTPUT_VARIABLE TF_INFORMATION_STRING
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE retcode)
@@ -77,7 +77,18 @@ else()
   list(GET TF_INFORMATION_LIST 0 TF_DETECTED_VERSION)
   list(GET TF_INFORMATION_LIST 1 TF_DETECTED_ABI)
   list(GET TF_INFORMATION_LIST 2 TF_DETECTED_INCLUDE_DIR)
-  list(GET TF_INFORMATION_LIST 3 TF_DETECTED_LIBRARY)
+  list(GET TF_INFORMATION_LIST 3 TF_DETECTED_LIBRARY_PATH)
+
+  find_file( TF_DETECTED_LIBRARY
+    NAMES libtensorflow_framework.so.1 libtensorflow_framework.so libtensorflow_framework.dll libtensorflow_framework.dylib libtensorflow_framework.dylib.1
+    PATHS ${TF_DETECTED_LIBRARY_PATH}
+    DOC "The tensorflow_framework library path."
+  )
+ if( NOT TF_DETECTED_LIBRARY )
+   message(FATAL_ERROR "Required library for tensorflow_framework not found in ${TF_DETECTED_LIBRARY_PATH}!")
+ else()
+   message(STATUS "Found: ${TF_DETECTED_LIBRARY}")
+ endif()
 
   # set(TF_DETECTED_VERSION 1.8)
 
