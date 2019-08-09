@@ -56,8 +56,7 @@ endif()
 
 set(PYTHON_EXECUTABLE "python3" CACHE FILEPATH "Specify the python executable that TensorFlow is installed on.")
 
-
-if(TensorFlow_FOUND)
+if(TensorFlow_FOUND AND EXISTS "${TensorFlow_LIBRARY}" AND IS_DIRECTORY "${TensorFlow_INCLUDE_DIR}")
   # reuse cached variables
   message(STATUS "Reuse cached information from TensorFlow ${TensorFlow_VERSION} ")
 else()
