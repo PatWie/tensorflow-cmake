@@ -329,10 +329,10 @@ mark_as_advanced(TF_INFORMATION_STRING TF_DETECTED_VERSION TF_DETECTED_VERSION_M
                  TF_DETECTED_INCLUDE_DIR TF_DETECTED_LIBRARY TF_DISABLE_ASSERTS
                  TensorFlow_C_LIBRARY TensorFlow_LIBRARY TensorFlow_SOURCE_DIR TensorFlow_INCLUDE_DIR TensorFlow_ABI)
 
-set(TensorFlow_INCLUDE_DIR ${TensorFlow_INCLUDE_DIR} CACHE PATH "The path to tensorflow header files")
-set(TensorFlow_VERSION ${TensorFlow_VERSION} CACHE INTERNAL "The Tensorflow version")
-set(TensorFlow_ABI ${TensorFlow_ABI} CACHE STRING "The ABI version used by TensorFlow")
-set(TensorFlow_LIBRARY ${TensorFlow_LIBRARY} CACHE PATH "The C++ library of TensorFlow")
-set(TensorFlow_C_LIBRARY ${TensorFlow_C_LIBRARY} CACHE STRING "The C library of TensorFlow")
-set(TensorFlow_FOUND ${TensorFlow_FOUND} CACHE BOOL "A flag stating if TensorFlow has been found")
-set(TF_DISABLE_ASSERTS ${TF_DISABLE_ASSERTS} CACHE BOOL "A flag to enable workarounds")
+set(TensorFlow_INCLUDE_DIR "${TensorFlow_INCLUDE_DIR}" CACHE PATH "The path to tensorflow header files")
+set(TensorFlow_VERSION "${TensorFlow_VERSION}" CACHE INTERNAL "The Tensorflow version")
+set(TensorFlow_ABI "${TensorFlow_ABI}" CACHE STRING "The ABI version used by TensorFlow")
+set(TensorFlow_LIBRARY "${TensorFlow_LIBRARY}" CACHE FILEPATH "The C++ library of TensorFlow")
+set(TensorFlow_C_LIBRARY "${TensorFlow_C_LIBRARY}" CACHE STRING "The C library of TensorFlow")
+set(TensorFlow_FOUND "${TensorFlow_FOUND}" CACHE BOOL "A flag stating if TensorFlow has been found")
+set(TF_DISABLE_ASSERTS "${TF_DISABLE_ASSERTS}" CACHE BOOL "A flag to enable workarounds")
