@@ -44,13 +44,13 @@ if(APPLE)
   message(WARNING "This FindTensorflow.cmake is not tested on APPLE\n"
                   "Please report if this works\n"
                   "https://github.com/PatWie/tensorflow-cmake")
-endif(APPLE)
+endif()
 
 if(WIN32)
   message(WARNING "This FindTensorflow.cmake is not tested on WIN32\n"
                   "Please report if this works\n"
                   "https://github.com/PatWie/tensorflow-cmake")
-endif(WIN32)
+endif()
 
 set(PYTHON_EXECUTABLE "python3" CACHE STRING "specify the python version TensorFlow is installed on.")
 
@@ -118,7 +118,7 @@ else()
     set(_TensorFlow_TEST_VERSIONS
         "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}.${TF_FIND_VERSION_PATCH}"
         "${TF_FIND_VERSION_MAJOR}.${TF_FIND_VERSION_MINOR}")
-  else(TF_FIND_VERSION_EXACT)
+  else() # TF_FIND_VERSION_EXACT
     # User requested not an exact TensorFlow version.
     # However, only TensorFlow versions 1.9, 1.10 support all header files
     # for custom ops.
@@ -134,11 +134,11 @@ else()
             # This version is high enough.
             list(APPEND _TensorFlow_TEST_VERSIONS "${version}")
           endif()
-        endforeach(version)
-      else(TF_FIND_VERSION)
+        endforeach()
+      else() # TF_FIND_VERSION
         # Any version is acceptable.
         set(_TensorFlow_TEST_VERSIONS "${_TensorFlow_KNOWN_VERSIONS}")
-      endif(TF_FIND_VERSION)
+      endif()
   endif()
 
   # test all given versions
@@ -160,12 +160,12 @@ else()
       add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
       break()
     endif()
-  endforeach(_TensorFlow_VER)
+  endforeach()
 
   if(NOT TensorFlow_FOUND)
   message(FATAL_ERROR "Your installed TensorFlow version ${TF_DETECTED_VERSION_MAJOR}.${TF_DETECTED_VERSION_MINOR} is not supported\n"
                       "We tested against ${_TensorFlow_TEST_VERSIONS}")
-  endif(NOT TensorFlow_FOUND)
+  endif()
 
   # test 1.11 version
   if("${TF_DETECTED_VERSION}" VERSION_EQUAL "1.11")
