@@ -143,7 +143,7 @@ else()
 
   # test all given versions
   set(TensorFlow_FOUND FALSE)
-  FOREACH(_TensorFlow_VER ${_TensorFlow_TEST_VERSIONS})
+  foreach(_TensorFlow_VER ${_TensorFlow_TEST_VERSIONS})
     if("${TF_DETECTED_VERSION_MAJOR}.${TF_DETECTED_VERSION_MINOR}" STREQUAL "${_TensorFlow_VER}")
       # found appropriate version
       set(TensorFlow_VERSION ${TF_DETECTED_VERSION})
@@ -160,7 +160,7 @@ else()
       add_definitions("-DTENSORFLOW_VERSION=${TensorFlow_VERSION}")
       break()
     endif()
-  ENDFOREACH(_TensorFlow_VER)
+  endforeach(_TensorFlow_VER)
 
   if(NOT TensorFlow_FOUND)
   message(FATAL_ERROR "Your installed TensorFlow version ${TF_DETECTED_VERSION_MAJOR}.${TF_DETECTED_VERSION_MINOR} is not supported\n"
@@ -274,10 +274,10 @@ endmacro()
 
 # simplify TensorFlow dependencies
 add_library(TensorFlow_DEP INTERFACE)
-TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP SYSTEM INTERFACE ${TensorFlow_SOURCE_DIR})
-TARGET_INCLUDE_DIRECTORIES(TensorFlow_DEP SYSTEM INTERFACE ${TensorFlow_INCLUDE_DIR})
-TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_C_LIBRARY} -Wl,--no-whole-archive)
-TARGET_LINK_LIBRARIES(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_LIBRARY} -Wl,--no-whole-archive)
+target_include_directories(TensorFlow_DEP SYSTEM INTERFACE ${TensorFlow_SOURCE_DIR})
+target_include_directories(TensorFlow_DEP SYSTEM INTERFACE ${TensorFlow_INCLUDE_DIR})
+target_link_libraries(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_C_LIBRARY} -Wl,--no-whole-archive)
+target_link_libraries(TensorFlow_DEP INTERFACE -Wl,--allow-multiple-definition -Wl,--whole-archive ${TensorFlow_LIBRARY} -Wl,--no-whole-archive)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
@@ -294,9 +294,9 @@ mark_as_advanced(TF_INFORMATION_STRING TF_DETECTED_VERSION TF_DETECTED_VERSION_M
                  TF_DETECTED_INCLUDE_DIR TF_DETECTED_LIBRARY TF_DISABLE_ASSERTS
                  TensorFlow_C_LIBRARY TensorFlow_LIBRARY TensorFlow_SOURCE_DIR TensorFlow_INCLUDE_DIR TensorFlow_ABI)
 
-SET(TensorFlow_INCLUDE_DIR ${TensorFlow_INCLUDE_DIR} CACHE PATH "path to tensorflow header files")
-SET(TensorFlow_VERSION ${TensorFlow_VERSION} CACHE INTERNAL "The Python executable Version")
-SET(TensorFlow_ABI ${TensorFlow_ABI} CACHE STRING "The Python executable Version")
-SET(TensorFlow_LIBRARY ${TensorFlow_LIBRARY} CACHE PATH "The Python executable Version")
-SET(TensorFlow_FOUND ${TensorFlow_FOUND} CACHE BOOL "The Python executable Version")
-SET(TF_DISABLE_ASSERTS ${TF_DISABLE_ASSERTS} CACHE BOOL "Workarounds")
+set(TensorFlow_INCLUDE_DIR ${TensorFlow_INCLUDE_DIR} CACHE PATH "path to tensorflow header files")
+set(TensorFlow_VERSION ${TensorFlow_VERSION} CACHE INTERNAL "The Python executable Version")
+set(TensorFlow_ABI ${TensorFlow_ABI} CACHE STRING "The Python executable Version")
+set(TensorFlow_LIBRARY ${TensorFlow_LIBRARY} CACHE PATH "The Python executable Version")
+set(TensorFlow_FOUND ${TensorFlow_FOUND} CACHE BOOL "The Python executable Version")
+set(TF_DISABLE_ASSERTS ${TF_DISABLE_ASSERTS} CACHE BOOL "Workarounds")
