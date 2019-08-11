@@ -18,7 +18,7 @@ def custom_op_step(image, src_dir):
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd custom_op/user_ops',
-          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2',
           'make'
       ],
   }
@@ -32,7 +32,7 @@ def inference_cc_step(image, src_dir):
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd inference/cc/',
-          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2',
           'make'
       ],
       'environment': {
@@ -50,7 +50,7 @@ def inference_c_step(image, src_dir):
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd inference/c/',
-          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2',
           'make'
       ],
       'environment': {
@@ -93,7 +93,7 @@ def example_keras(image, src_dir):
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd examples/keras/',
-          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2',
           'make',
       ],
       'environment': {
@@ -111,7 +111,7 @@ def example_simple(image, src_dir):
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd examples/simple/',
-          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2',
           'make',
       ],
       'environment': {
@@ -129,7 +129,7 @@ def example_resize(image, src_dir):
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd examples/resize/',
-          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2',
           'make',
       ],
       'environment': {
@@ -147,7 +147,7 @@ def event_writer(image, src_dir):
       'commands': [
           'export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}',
           'cd examples/event_writer/',
-          'cmake . -DPYTHON_EXECUTABLE=python2',
+          'cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2',
           'make',
       ],
       'environment': {

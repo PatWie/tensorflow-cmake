@@ -54,12 +54,13 @@ if(WIN32)
                   "https://github.com/PatWie/tensorflow-cmake")
 endif()
 
-set(PYTHON_EXECUTABLE "python3" CACHE STRING "specify the python version TensorFlow is installed on.")
 
 if(TensorFlow_FOUND AND EXISTS "${TensorFlow_LIBRARY}" AND IS_DIRECTORY "${TensorFlow_INCLUDE_DIR}")
+
   # reuse cached variables
   message(STATUS "Reuse cached information from TensorFlow ${TensorFlow_VERSION} ")
 else()
+  find_package(PythonInterp REQUIRED)
   message(STATUS "Detecting TensorFlow using ${PYTHON_EXECUTABLE}"
           " (use -DPYTHON_EXECUTABLE=... otherwise)")
   execute_process(
