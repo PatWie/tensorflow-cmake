@@ -1,12 +1,12 @@
 # Patrick Wieschollek, <mail@patwie.com>
-# FindTENSORFLOW.cmake
+# FindTensorFlow.cmake
 # https://github.com/PatWie/tensorflow-cmake/blob/master/cmake/modules/FindTensorFlow.cmake
 # -------------
 #
 # Find TensorFlow library and includes
 #
-# Automatically set variables have prefix "TensorFlow",
-# while variables you need to specify have prefix "TENSORFLOW"
+# Automatically set variables have prefix "TensorFlow_",
+# while environmental variables you can specify have prefix "TENSORFLOW_"
 # This module will set the following variables in your project:
 #
 # ``TensorFlow_VERSION``
@@ -19,12 +19,14 @@
 #   the libraries to link against to use TENSORFLOW obtained from runtime
 # ``TensorFlow_FOUND TRUE``
 #   If false, do not try to use TENSORFLOW.
-#
-#  for some examples, you will need to specify on of the following paths
-# ``TensorFlow_SOURCE_DIR``
-#   Path to source of TensorFlow, when env-var 'TENSORFLOW_SOURCE_DIR' is set and path exists
 # ``TensorFlow_C_LIBRARY``
-#   Path to libtensorflow_cc.so (require env-var 'TENSORFLOW_BUILD_DIR')
+#   Path to tensorflow_cc libarary (libtensorflow_cc.so.1, libtensorflow.so, or similar) (requires env-var 'TENSORFLOW_BUILD_DIR')
+#
+#  for some examples, you will need to specify on of the following cmake variables:
+# ``TensorFlow_BUILD_DIR`` Is the directory containing the tensorflow_cc library, which can be initialized
+#  with env-var 'TENSORFLOW_BUILD_DIR' environmental variable
+# ``TensorFlow_SOURCE_DIR`` Is the path to source of TensorFlow, which can be initialized
+#  with env-var 'TENSORFLOW_SOURCE_DIR' environmental variable
 #
 #
 # USAGE
@@ -227,14 +229,14 @@ endif()
 macro(TensorFlow_REQUIRE_C_LIBRARY)
   if(TensorFlow_C_LIBRARY)
   else()
-    message(FATAL_ERROR "Project requires libtensorflow_cc.so, please specify the path in ENV-VAR 'TENSORFLOW_BUILD_DIR'")
+    message(FATAL_ERROR "Project requires libtensorflow_cc.so, please specify the path in ENV 'export TENSORFLOW_BUILD_DIR=...' or cmake -DTensorFlow_BUILD_DIR:PATH=...")
   endif()
 endmacro()
 
 macro(TensorFlow_REQUIRE_SOURCE)
   if(TensorFlow_SOURCE_DIR)
   else()
-    message(FATAL_ERROR "Project requires TensorFlow source directory, please specify the path in ENV-VAR 'TENSORFLOW_SOURCE_DIR'")
+    message(FATAL_ERROR "Project requires TensorFlow source directory, please specify the path in ENV 'export TENSORFLOW_SOURCE_DIR=...' or cmake -DTensorFlow_SOURCE_DIR:PATH=...")
   endif()
 endmacro()
 
