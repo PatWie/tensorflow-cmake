@@ -13,7 +13,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd custom_op/user_ops
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
 
 - name: inference_cc
@@ -22,7 +22,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/cc/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -34,7 +34,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/c/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -65,7 +65,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/keras/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -77,7 +77,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/simple/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -89,7 +89,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/resize/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -101,7 +101,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/event_writer/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -122,7 +122,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd custom_op/user_ops
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
 
 - name: inference_cc
@@ -131,7 +131,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/cc/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -143,7 +143,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/c/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -174,7 +174,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/keras/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -186,7 +186,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/simple/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -198,7 +198,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/resize/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -210,7 +210,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/event_writer/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -231,7 +231,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd custom_op/user_ops
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
 
 - name: inference_cc
@@ -240,7 +240,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/cc/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -252,7 +252,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/c/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -283,7 +283,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/keras/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -295,7 +295,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/simple/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -307,7 +307,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/resize/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -319,7 +319,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/event_writer/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -340,7 +340,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd custom_op/user_ops
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
 
 - name: inference_cc
@@ -349,7 +349,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/cc/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -361,7 +361,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/c/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -392,7 +392,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/keras/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -404,7 +404,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/simple/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -416,7 +416,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/resize/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -428,7 +428,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/event_writer/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -449,7 +449,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd custom_op/user_ops
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
 
 - name: inference_cc
@@ -458,7 +458,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/cc/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -470,7 +470,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd inference/c/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -501,7 +501,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/keras/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -513,7 +513,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/simple/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -525,7 +525,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/resize/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
@@ -537,7 +537,7 @@ steps:
   commands:
   - "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:$${LD_LIBRARY_PATH}"
   - cd examples/event_writer/
-  - cmake . -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
+  - cmake . -DTensorFlow_BUILD_DIR:PATH=/tensorflow_dist -DTensorFlow_SOURCE_DIR:PATH=/tensorflow_src -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2
   - make
   environment:
     TENSORFLOW_BUILD_DIR: /tensorflow_dist
