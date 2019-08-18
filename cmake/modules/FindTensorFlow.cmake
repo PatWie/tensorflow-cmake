@@ -20,7 +20,7 @@
 # ``TensorFlow_FOUND TRUE``
 #   If false, do not try to use TENSORFLOW.
 # ``TensorFlow_C_LIBRARY``
-#   Path to tensorflow_cc libarary (libtensorflow_cc.so.1, libtensorflow.so, or similar) (requires env-var 'TENSORFLOW_BUILD_DIR')
+#   Path to tensorflow_cc library (libtensorflow[.so,.dylib,.dll], or similar)
 #
 #  for some examples, you will need to specify on of the following cmake variables:
 # ``TensorFlow_BUILD_DIR`` Is the directory containing the tensorflow_cc library, which can be initialized
@@ -56,15 +56,14 @@ endif()
 
 set(PYTHON_EXECUTABLE "python3" CACHE STRING "specify the python version TensorFlow is installed on.")
 
-
-if(TensorFlow_FOUND)
+if(TensorFlow_FOUND AND EXISTS "${TensorFlow_LIBRARY}" AND IS_DIRECTORY "${TensorFlow_INCLUDE_DIR}")
   # reuse cached variables
   message(STATUS "Reuse cached information from TensorFlow ${TensorFlow_VERSION} ")
 else()
   message(STATUS "Detecting TensorFlow using ${PYTHON_EXECUTABLE}"
           " (use -DPYTHON_EXECUTABLE=... otherwise)")
   execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c "import tensorflow as tf; print(tf.__version__); print(tf.__cxx11_abi_flag__); print(tf.sysconfig.get_include()); print(tf.sysconfig.get_lib() + '/libtensorflow_framework.so')"
+    COMMAND ${PYTHON_EXECUTABLE} -c "import tensorflow as tf; print(tf.__version__); print(tf.__cxx11_abi_flag__); print(tf.sysconfig.get_include()); print(tf.sysconfig.get_lib());"
     OUTPUT_VARIABLE TF_INFORMATION_STRING
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE retcode)
@@ -79,7 +78,7 @@ else()
   list(GET TF_INFORMATION_LIST 0 TF_DETECTED_VERSION)
   list(GET TF_INFORMATION_LIST 1 TF_DETECTED_ABI)
   list(GET TF_INFORMATION_LIST 2 TF_DETECTED_INCLUDE_DIR)
-  list(GET TF_INFORMATION_LIST 3 TF_DETECTED_LIBRARY)
+  list(GET TF_INFORMATION_LIST 3 TF_DETECTED_LIBRARY_PATH)
 
   # set(TF_DETECTED_VERSION 1.8)
 
@@ -143,6 +142,93 @@ else()
       endif()
   endif()
 
+  #### ---- Configure TensorFlow_SOURCE_DIR
+  # Order of precidence is 1) CMake variable value, 2) Environmental Variable value
+  if(IS_DIRECTORY "${TensorFlow_SOURCE_DIR}")
+    set(TensorFlow_SOURCE_DIR "${TensorFlow_SOURCE_DIR}" CACHE PATH "directory containing the file 'libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}'")
+  else()
+    if(IS_DIRECTORY "$ENV{TENSORFLOW_SOURCE_DIR}")
+      set(TensorFlow_SOURCE_DIR "$ENV{TENSORFLOW_SOURCE_DIR}" CACHE PATH "source code for tensorflow (i.e. the git checkout directory of the source code)")
+    else()
+      set(TensorFlow_SOURCE_DIR "TensorFlow_SOURCE_DIR-NOTFOUND" CACHE PATH "source code for tensorflow (i.e. the git checkout directory of the source code)")
+    endif()
+  endif()
+
+  # Report on status of cmake cache variable for TensorFlow_SOURCE_DIR
+  if(IS_DIRECTORY ${TensorFlow_SOURCE_DIR})
+    message(STATUS "TensorFlow_SOURCE_DIR is ${TensorFlow_SOURCE_DIR}")
+  else()
+    # NOTE This is not a fatal error for backward compatibility ("custom_op test")
+    message(STATUS "No directory at 'TensorFlow_SOURCE_DIR:PATH=${TensorFlow_SOURCE_DIR}' detected,\n"
+      "please specify the path in ENV 'export TENSORFLOW_SOURCE_DIR=...'\n or cmake -DTensorFlow_SOURCE_DIR:PATH=...\n"
+      "to the directory containing the source code for tensorflow\n (i.e. the git checkout directory of the source code)"
+      )
+  endif()
+
+  #### ---- Configure TensorFlow_BUILD_DIR
+  # Order of precidence is 1) CMake variable value, 2) Environmental Variable value
+  if(IS_DIRECTORY "${TensorFlow_BUILD_DIR}")
+    set(TensorFlow_BUILD_DIR "${TensorFlow_BUILD_DIR}" CACHE PATH "directory containing the file 'libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}'")
+  else()
+    if(IS_DIRECTORY "$ENV{TENSORFLOW_BUILD_DIR}")
+      set(TensorFlow_BUILD_DIR "$ENV{TENSORFLOW_BUILD_DIR}" CACHE PATH "directory containing the file 'libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}'")
+    else()
+      set(TensorFlow_BUILD_DIR "TensorFlow_BUILD_DIR-NOTFOUND" CACHE PATH "directory containing the file 'libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}'")
+    endif()
+  endif()
+
+  # Report on status of cmake cache variable for TensorFlow_BUILD_DIR
+  if(IS_DIRECTORY ${TensorFlow_BUILD_DIR})
+    message(STATUS "TensorFlow_BUILD_DIR is ${TensorFlow_BUILD_DIR}")
+  else()
+    # NOTE This is not a fatal error for backward compatibility ("custom_op test")
+    message(STATUS "No directory at 'TensorFlow_BUILD_DIR:PATH=${TensorFlow_BUILD_DIR}' detected,\n"
+      "please specify the path in ENV 'export TENSORFLOW_BUILD_DIR=...'\n or cmake -DTensorFlow_BUILD_DIR:PATH=...\n"
+      "to the directory containing the file 'libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}'"
+      )
+  endif()
+
+  if(IS_DIRECTORY ${TensorFlow_BUILD_DIR})
+    file(GLOB_RECURSE TF_LIBRARY_SEARCH_PATHS
+      LIST_DIRECTORIES FALSE
+      "${TensorFlow_BUILD_DIR}/*libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}"
+      )
+    list(LENGTH TF_LIBRARY_SEARCH_PATHS TF_LIBRARY_SEARCH_PATHS_LENGTH)
+    if( NOT ${TF_LIBRARY_SEARCH_PATHS_LENGTH} EQUAL 1 )
+      message(FATAL_ERROR "Incorrect number of items matching 'libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}' in '${TF_LIBRARY_SEARCH_PATHS}'\n"
+        "( ${TF_LIBRARY_SEARCH_PATHS_LENGTH} != 1 ).\n"
+        "Change 'TensorFlow_BUILD_DIR' to have more specific path."
+      )
+    endif()
+    list(GET TF_LIBRARY_SEARCH_PATHS 0 TF_LIBRARY_SEARCH_ONEPATH)
+    get_filename_component(TensorFlow_C_LIBRARY_DIR "${TF_LIBRARY_SEARCH_ONEPATH}" DIRECTORY )
+
+    if( IS_DIRECTORY "${TensorFlow_C_LIBRARY_DIR}")
+      find_library(TensorFlow_C_LIBRARY
+        NAMES tensorflow_cc
+        PATHS "${TensorFlow_C_LIBRARY_DIR}"
+        DOC "TensorFlow CC library." )
+    endif()
+    if( TensorFlow_C_LIBRARY )
+      message(STATUS "TensorFlow-CC-LIBRARY is ${TensorFlow_C_LIBRARY}")
+    else()
+      # NOTE This is not a fatal error for backward compatibility ("custom_op test")
+      message(STATUS "No TensorFlow-CC-LIBRARY detected")
+    endif()
+  endif()
+
+  find_library( TF_DETECTED_LIBRARY
+      NAMES tensorflow_framework
+      PATHS "${TensorFlow_C_LIBRARY_DIR}" # Prefer the library from the build tree, if TensorFlow_C_LIBRARY is detected.
+            "${TF_DETECTED_LIBRARY_PATH}" # use copy of file from the python install tree (This often has a .so.1 extension only for installed version)
+      DOC "The tensorflow_framework library path."
+  )
+  if( TF_DETECTED_LIBRARY )
+    message(STATUS "Found: ${TF_DETECTED_LIBRARY}")
+  else()
+    message(FATAL_ERROR "Required library for tensorflow_framework not found in ${TF_DETECTED_LIBRARY_PATH}!")
+  endif()
+
   # test all given versions
   set(TensorFlow_FOUND FALSE)
   foreach(_TensorFlow_VER ${_TensorFlow_TEST_VERSIONS})
@@ -190,52 +276,20 @@ else()
     set(TF_DISABLE_ASSERTS "TRUE")
   endif()
 
-endif()
-
+endif() #-- End detection 
 
 if(${TF_DISABLE_ASSERTS})
   message(STATUS "[WARNING] The TensorFlow version ${TF_DETECTED_VERSION} has a bug (see \#22766). We disable asserts using -DNDEBUG=True ")
   add_definitions("-DNDEBUG=True")
 endif()
-
-find_library(TensorFlow_C_LIBRARY
-  NAMES libtensorflow_cc.so
-  PATHS $ENV{TENSORFLOW_BUILD_DIR}
-  DOC "TensorFlow CC library." )
-
-if(TensorFlow_C_LIBRARY)
-  message(STATUS "TensorFlow-CC-LIBRARY is ${TensorFlow_C_LIBRARY}")
-else()
-  message(STATUS "No TensorFlow-CC-LIBRARY detected")
-endif()
-
-find_path(TensorFlow_SOURCE_DIR
-        NAMES
-        tensorflow/c
-        tensorflow/cc
-        tensorflow/core
-        tensorflow/core/framework
-        tensorflow/core/platform
-        tensorflow/python
-        third_party
-        PATHS $ENV{TENSORFLOW_SOURCE_DIR})
-
-if(TensorFlow_SOURCE_DIR)
-  message(STATUS "TensorFlow-SOURCE-DIRECTORY is ${TensorFlow_SOURCE_DIR}")
-else()
-  message(STATUS "No TensorFlow source repository detected")
-endif()
-
 macro(TensorFlow_REQUIRE_C_LIBRARY)
-  if(TensorFlow_C_LIBRARY)
-  else()
-    message(FATAL_ERROR "Project requires libtensorflow_cc.so, please specify the path in ENV 'export TENSORFLOW_BUILD_DIR=...' or cmake -DTensorFlow_BUILD_DIR:PATH=...")
+  if(NOT EXISTS "${TensorFlow_C_LIBRARY}")
+    message(FATAL_ERROR "Project requires libtensorflow_cc${CMAKE_SHARED_LIBRARY_SUFFIX}, please specify the path in ENV 'export TENSORFLOW_BUILD_DIR=...' or cmake -DTensorFlow_BUILD_DIR:PATH=...")
   endif()
 endmacro()
 
 macro(TensorFlow_REQUIRE_SOURCE)
-  if(TensorFlow_SOURCE_DIR)
-  else()
+  if(NOT IS_DIRECTORY "${TensorFlow_SOURCE_DIR}")
     message(FATAL_ERROR "Project requires TensorFlow source directory, please specify the path in ENV 'export TENSORFLOW_SOURCE_DIR=...' or cmake -DTensorFlow_SOURCE_DIR:PATH=...")
   endif()
 endmacro()
